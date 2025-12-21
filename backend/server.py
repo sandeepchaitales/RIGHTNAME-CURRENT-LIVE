@@ -74,7 +74,14 @@ async def evaluate_brands(request: BrandEvaluationRequest):
         
         # Parse JSON from response
         # Claude might wrap it in markdown code blocks, strip them
-        content = response.text
+        # Handle both string and object responses
+        if hasattr(response, 'text'):
+            content = response.text
+        elif isinstance(response, str):
+            content = response
+        else:
+            content = str(response)
+            
         if "```json" in content:
             content = content.split("```json")[1].split("```")[0]
         elif "```" in content:
