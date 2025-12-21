@@ -52,14 +52,23 @@ Output JSON Structure:
       "namescore": 85.5,
       "verdict": "GO",
       "summary": "Short verdict summary.",
+      "strategic_classification": "e.g., FUEL is a DIFFERENTIATION BRAND, not a LEADERSHIP BRAND.",
+      "pros": [
+        "Modern, aspirational positioning",
+        "Global expansion potential"
+      ],
+      "cons": [
+        "Sacrifices heritage authenticity",
+        "Trademark defensibility issues"
+      ],
       "positioning_fit": "Analysis of fit with Mass/Premium/Ultra.",
       "dimensions": [
-        {"name": "Brand Distinctiveness & Memorability", "score": 9.0, "reasoning": "Detailed analysis of distinctiveness..."},
-        {"name": "Cultural & Linguistic Resonance", "score": 8.5, "reasoning": "Detailed analysis of cultural fit..."},
-        {"name": "Premiumisation & Trust Curve", "score": 8.0, "reasoning": "Detailed analysis of premium perception..."},
-        {"name": "Scalability & Brand Architecture", "score": 9.0, "reasoning": "Detailed analysis of scalability..."},
-        {"name": "Trademark & Legal Sensitivity", "score": 7.0, "reasoning": "Detailed analysis of probabilistic trademark risk..."},
-        {"name": "Consumer Perception Mapping", "score": 8.0, "reasoning": "Detailed analysis of consumer perception..."}
+        {"name": "Brand Distinctiveness & Memorability", "score": 9.0, "reasoning": "Detailed analysis..."},
+        {"name": "Cultural & Linguistic Resonance", "score": 8.5, "reasoning": "Detailed analysis..."},
+        {"name": "Premiumisation & Trust Curve", "score": 8.0, "reasoning": "Detailed analysis..."},
+        {"name": "Scalability & Brand Architecture", "score": 9.0, "reasoning": "Detailed analysis..."},
+        {"name": "Trademark & Legal Sensitivity", "score": 7.0, "reasoning": "Detailed analysis..."},
+        {"name": "Consumer Perception Mapping", "score": 8.0, "reasoning": "Detailed analysis..."}
       ],
       "trademark_risk": {
         "risk_level": "Low/Medium/High/Critical",

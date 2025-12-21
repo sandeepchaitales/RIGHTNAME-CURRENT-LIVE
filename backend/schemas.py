@@ -25,6 +25,9 @@ class BrandScore(BaseModel):
     namescore: float
     verdict: Literal["GO", "CONDITIONAL GO", "NO-GO", "REJECT"]
     summary: str
+    strategic_classification: str
+    pros: List[str]
+    cons: List[str]
     dimensions: List[DimensionScore]
     trademark_risk: TrademarkRisk
     cultural_analysis: List[CountryAnalysis]
