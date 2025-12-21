@@ -1,12 +1,11 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { BrandRadarChart, ScoreCard } from '../components/AnalysisComponents';
+import { BrandRadarChart, ScoreCard, CompetitionAnalysis } from '../components/AnalysisComponents';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Printer, ArrowLeft, CheckCircle2, XCircle } from "lucide-react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -192,27 +191,40 @@ const Dashboard = () => {
                          </div>
                     </div>
 
-                    {/* Detailed Framework Analysis */}
-                    <div className="mt-8">
-                        <h3 className="text-2xl font-serif font-bold text-slate-900 mb-6">Detailed Framework Analysis</h3>
-                        <Accordion type="single" collapsible className="w-full bg-white rounded-lg border shadow-sm px-6">
+                    {/* Competitor Analysis Section */}
+                    {brand.competitor_analysis && (
+                        <div className="mt-8">
+                            <CompetitionAnalysis data={brand.competitor_analysis} />
+                        </div>
+                    )}
+
+
+                    {/* Detailed Framework Analysis - Full Cards instead of Accordion */}
+                    <div className="mt-12 space-y-6">
+                        <div className="flex items-center space-x-4 mb-4">
+                             <Separator className="w-10 bg-slate-900 h-1" />
+                             <h3 className="text-2xl font-serif font-bold text-slate-900">Detailed Framework Analysis</h3>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {brand.dimensions.map((dim, i) => (
-                                <AccordionItem key={i} value={`item-${i}`} className="border-b-slate-100 last:border-0">
-                                    <AccordionTrigger className="hover:no-underline py-4">
-                                        <div className="flex justify-between w-full items-center pr-4">
-                                            <span className="font-serif font-medium text-lg">{dim.name}</span>
-                                            <div className="flex items-center space-x-2">
-                                                <span className="text-sm text-slate-400 uppercase tracking-widest text-xs">Score</span>
-                                                <span className="font-bold text-primary">{dim.score}/10</span>
-                                            </div>
+                                <Card key={i} className="border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                                    <CardHeader className="bg-slate-50 border-b border-slate-100 pb-4">
+                                        <div className="flex justify-between items-start">
+                                            <CardTitle className="text-lg font-serif text-slate-800">{dim.name}</CardTitle>
+                                            <Badge variant="outline" className="bg-white text-slate-900 font-bold border-slate-300">
+                                                {dim.score}/10
+                                            </Badge>
                                         </div>
-                                    </AccordionTrigger>
-                                    <AccordionContent className="text-slate-600 leading-relaxed pb-6 whitespace-pre-wrap">
-                                        {dim.reasoning}
-                                    </AccordionContent>
-                                </AccordionItem>
+                                    </CardHeader>
+                                    <CardContent className="pt-6">
+                                        <div className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap font-sans">
+                                            {dim.reasoning}
+                                        </div>
+                                    </CardContent>
+                                </Card>
                             ))}
-                        </Accordion>
+                        </div>
                     </div>
 
                 </div>
