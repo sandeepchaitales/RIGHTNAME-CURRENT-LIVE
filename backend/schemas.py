@@ -24,7 +24,7 @@ class TrademarkRiskMatrix(BaseModel):
 
 class DomainAnalysis(BaseModel):
     exact_match_status: str
-    alternatives: List[Dict[str, str]]  # e.g., {"domain": "getbrand.com", "example": "Used by ..."}
+    alternatives: List[Dict[str, str]]
     strategy_note: str
 
 class CountryAnalysis(BaseModel):
@@ -44,6 +44,17 @@ class CompetitorAnalysis(BaseModel):
     strategic_advantage: str
     suggested_pricing: str
 
+class Recommendation(BaseModel):
+    title: str
+    content: str
+
+class FinalAssessment(BaseModel):
+    verdict_statement: str
+    suitability_score: float
+    dimension_breakdown: List[Dict[str, float]]  # Simple name: score mapping for the list
+    recommendations: List[Recommendation]
+    alternative_path: str
+
 class BrandScore(BaseModel):
     brand_name: str
     namescore: float
@@ -53,13 +64,12 @@ class BrandScore(BaseModel):
     pros: List[str]
     cons: List[str]
     dimensions: List[DimensionScore]
-    # Keep old trademark_risk for backward compat if needed, or just use the new matrix. 
-    # The prompt implies adding a NEW column/section. I will keep the simple risk for summary card, and add matrix for detailed view.
-    trademark_risk: dict # Simplified for summary
-    trademark_matrix: TrademarkRiskMatrix # NEW
-    domain_analysis: DomainAnalysis # NEW
+    trademark_risk: dict 
+    trademark_matrix: TrademarkRiskMatrix
+    domain_analysis: DomainAnalysis
     cultural_analysis: List[CountryAnalysis]
     competitor_analysis: Optional[CompetitorAnalysis] = None
+    final_assessment: Optional[FinalAssessment] = None # NEW FIELD
     positioning_fit: str
 
 class BrandEvaluationRequest(BaseModel):

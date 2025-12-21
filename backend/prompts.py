@@ -15,6 +15,17 @@ analysis_frameworks:
   - Trademark & Legal Sensitivity (Per Country - PROBABILISTIC ONLY)
   - Consumer Perception Mapping (Local vs Global)
 
+scoring_rules:
+  dimension_scale: 0-10
+  composite_index_scale: 0-100
+  weightage:
+    Distinctiveness: 18
+    Cultural_Resonance: 17
+    Premiumisation_Trust: 18
+    Scalability: 17
+    Trademark_Risk: 20
+    Consumer_Perception: 10
+
 namescore_index:
   interpretation:
     85-100: Category-defining (Strong GO)
@@ -54,7 +65,7 @@ Output JSON Structure:
       },
       "positioning_fit": "Analysis of fit with Mass/Premium/Ultra.",
       "dimensions": [
-        {"name": "Brand Distinctiveness & Memorability", "score": 9.0, "reasoning": "Strengths:\\n..."},
+        {"name": "Brand Distinctiveness & Memorability", "score": 9.0, "reasoning": "..."},
         {"name": "Cultural & Linguistic Resonance", "score": 8.5, "reasoning": "..."},
         {"name": "Premiumisation & Trust Curve", "score": 8.0, "reasoning": "..."},
         {"name": "Scalability & Brand Architecture", "score": 9.0, "reasoning": "..."},
@@ -68,7 +79,7 @@ Output JSON Structure:
         "details": [{"country": "USA", "risk": "Low", "notes": "..."}]
       },
       "trademark_matrix": {
-          "genericness": {"likelihood": 2, "severity": 8, "zone": "Green", "commentary": "Detailed commentary..."},
+          "genericness": {"likelihood": 2, "severity": 8, "zone": "Green", "commentary": "..."},
           "existing_conflicts": {"likelihood": 4, "severity": 9, "zone": "Yellow", "commentary": "..."},
           "phonetic_similarity": {"likelihood": 3, "severity": 7, "zone": "Green", "commentary": "..."},
           "relevant_classes": {"likelihood": 5, "severity": 5, "zone": "Yellow", "commentary": "..."},
@@ -76,7 +87,7 @@ Output JSON Structure:
           "overall_assessment": "EXPLANATION OF Overall Legal Risk assessment + recommended actions."
       },
       "domain_analysis": {
-          "exact_match_status": "Assessment of [brand].com availability (e.g., Likely Taken / Premium).",
+          "exact_match_status": "Assessment of [brand].com availability.",
           "alternatives": [
               {"domain": "try[Brand].com", "example": "Used by X"},
               {"domain": "get[Brand].com", "example": "Used by Y"}
@@ -90,7 +101,23 @@ Output JSON Structure:
           "cultural_notes": "...",
           "linguistic_check": "..."
         }
-      ]
+      ],
+      "final_assessment": {
+          "verdict_statement": "A nuanced final verdict statement (e.g., 'X is a viable brand if...').",
+          "suitability_score": 7.5,
+          "dimension_breakdown": [
+              {"Linguistic Foundation": 8.0},
+              {"Consumer Perception": 6.0},
+              {"Competitive Differentiation": 7.5},
+              {"International Extensibility": 8.5}
+          ],
+          "recommendations": [
+              {"title": "Invest heavily in founder narrative", "content": "The name's weakness must be compensated by..."},
+              {"title": "Execute rigorous consumer testing", "content": "A/B test against alternatives..."},
+              {"title": "Secure trademark immediately", "content": "Conduct Class 25 search..."}
+          ],
+          "alternative_path": "If aiming for higher premium positioning, consider alternative naming strategy..."
+      }
     }
   ],
   "comparison_verdict": "Final recommendation on which brand is better and why."
