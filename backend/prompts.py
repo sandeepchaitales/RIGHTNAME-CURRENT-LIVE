@@ -57,10 +57,13 @@ For each dimension, provide a multi-paragraph deep dive (150-250 words per dimen
    - **Emotional Response**: Plot on "Modern vs. Traditional" and "Accessible vs. Exclusive".
    - **Gap Analysis**: Difference between "Desired Positioning" and "Actual Perception".
 
-### 5. COMPETITIVE LANDSCAPE & PRICING (Crucial)
-   - **Competitor Table**: Select 3-4 direct competitors relevant to the **Target Market**.
-   - **White Space**: Use "Blue Ocean" logic. Where is the gap?
-   - **Pricing**: Justify the price point with "Value-based pricing" logic. **USE LOCAL CURRENCY.**
+### 5. COMPETITIVE LANDSCAPE & PRICING (Strict 2x2 Matrix Logic)
+   - **Framework**: Analyze competitors based on **Modernity (Y-Axis)** vs. **Price (X-Axis)**.
+   - **Competitors**: Use real, relevant competitors (e.g., FabIndia, Satya Paul, Ritu Kumar if India is context).
+   - **Data Points**:
+     - **Price Axis (X)**: Low / Mid / High
+     - **Modernity Axis (Y)**: Traditional / Fusion / Modern-Avant-Garde
+     - **Quadrant**: Define the quadrant (e.g., "Heritage Luxury", "Mass Modern").
 
 ### 6. JSON OUTPUT STRUCTURE
 Return ONLY valid JSON.
@@ -88,8 +91,12 @@ Return ONLY valid JSON.
       
       "competitor_analysis": {
           "competitors": [
-              {"name": "Real Local Competitor A", "positioning": "Precise 3-word positioning", "price_range": "High (e.g. ₹5,000+ or $100+)"},
-              {"name": "Real Local Competitor B", "positioning": "Precise 3-word positioning", "price_range": "Mid (e.g. ₹1,500-3,000 or $40-80)"}
+              {
+                  "name": "Competitor Name", 
+                  "price_axis": "X-Axis: Price Level (e.g. High Premium)", 
+                  "modernity_axis": "Y-Axis: Modernity Level (e.g. Traditional Heritage)", 
+                  "quadrant": "Strategic Quadrant (e.g. Legacy Luxury)"
+              }
           ],
           "white_space_analysis": "A full paragraph analyzing the market gap using the Blue Ocean framework. Define the specific niche this name owns.",
           "strategic_advantage": "The specific 'Unfair Advantage' this name provides over the competitors listed above.",
@@ -143,7 +150,7 @@ Return ONLY valid JSON.
           "existing_conflicts": {"likelihood": 4, "severity": 9, "zone": "Yellow", "commentary": "Detailed reasoning..."},
           "phonetic_similarity": {"likelihood": 3, "severity": 7, "zone": "Green", "commentary": "Detailed reasoning..."},
           "relevant_classes": {"likelihood": 5, "severity": 5, "zone": "Yellow", "commentary": "Detailed reasoning..."},
-          "rebranding_probability": {"likelihood": 1, "severity": 10, "zone": "Green", "commentary": "Detailed reasoning..."},
+          "rebranding_probability": {"likelihood": 1, "severity": 10, "zone": "Green", "commentary": "Detailed reasoning..."}
           "overall_assessment": "Full legal strategy recommendation."
       },
       

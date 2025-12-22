@@ -11,7 +11,6 @@ class DimensionScore(BaseModel):
 class TrademarkRiskRow(BaseModel):
     likelihood: int
     severity: int
-    # Relaxed to str to allow "Orange" or other LLM inventions without crashing
     zone: str 
     commentary: str
 
@@ -42,8 +41,9 @@ class CountryAnalysis(BaseModel):
 
 class Competitor(BaseModel):
     name: str
-    positioning: str
-    price_range: str
+    price_axis: str = Field(..., description="X-Axis: Price (Low/Mid/High)")
+    modernity_axis: str = Field(..., description="Y-Axis: Modernity (Traditional/Fusion/Modern)")
+    quadrant: str = Field(..., description="Quadrant Name")
 
 class CompetitorAnalysis(BaseModel):
     competitors: List[Competitor]
