@@ -32,6 +32,8 @@ const CustomTick = ({ payload, x, y, cx, cy, ...rest }) => {
 };
 
 export const BrandRadarChart = ({ data }) => {
+  // Normalize scores to 0-100 for display if needed, but chart domain is 0-10.
+  // Data comes in as 0-10 from backend.
   return (
     <div className="h-[400px] w-full min-w-[300px] relative">
       <ResponsiveContainer width="100%" height="100%">
@@ -71,7 +73,7 @@ export const BrandRadarChart = ({ data }) => {
         </RadarChart>
       </ResponsiveContainer>
       <div className="absolute bottom-2 right-2 text-[10px] text-slate-400 font-medium bg-white/80 px-2 py-1 rounded-md border border-slate-100">
-        Scale: 0-10 (Higher is Better)
+        Scale: 0-10
       </div>
     </div>
   );
@@ -117,7 +119,7 @@ export const ScoreCard = ({ title, score, verdict, subtitle, className }) => {
                         <span className={`text-7xl font-black tracking-tighter ${colorClass}`}>
                             {score}
                         </span>
-                        <span className="absolute top-2 -right-6 text-sm text-slate-400 font-bold">/100</span>
+                        <span className="absolute top-2 -right-8 text-sm text-slate-400 font-bold">/100</span>
                     </div>
                     {verdict && (
                         <div className="mt-4">
@@ -215,7 +217,6 @@ export const TrademarkRiskTable = ({ matrix }) => {
         if (zoneStr.includes("yellow") || zoneStr.includes("orange")) return <span className="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 border border-amber-200">MODERATE</span>;
         if (zoneStr.includes("red")) return <span className="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">HIGH RISK</span>;
         
-        // Fallback for unknown zones
         return <span className="inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">{zone.toUpperCase()}</span>;
     };
 
@@ -264,7 +265,6 @@ export const TrademarkRiskTable = ({ matrix }) => {
                 </Table>
             </div>
             
-            {/* Scoring Legend Footer */}
             <div className="p-4 bg-slate-50 border-t border-slate-100 flex flex-col md:flex-row gap-6 text-xs text-slate-500">
                 <div className="flex items-center gap-2">
                     <Info className="w-4 h-4 text-slate-400" />
@@ -347,6 +347,10 @@ export const DomainAvailabilityCard = ({ analysis }) => {
 export const FinalAssessmentCard = ({ assessment }) => {
     if (!assessment) return null;
 
+    // Determine scale for Suitability Score display
+    const isOutOf10 = assessment.suitability_score <= 10;
+    const denominator = isOutOf10 ? 10 : 100;
+
     return (
         <Card className={`${CARD_STYLE} ring-1 ring-slate-200 shadow-lg`}>
             <CardHeader className="bg-slate-900 text-white p-6">
@@ -363,7 +367,10 @@ export const FinalAssessmentCard = ({ assessment }) => {
                     <div className="md:col-span-4 p-6 border-b md:border-b-0 md:border-r border-slate-100 bg-slate-50/30">
                         <div className="mb-4">
                             <span className="text-xs font-bold uppercase tracking-widest text-slate-400 block mb-2">Suitability Score</span>
-                            <span className="text-4xl font-black text-slate-900">{assessment.suitability_score}<span className="text-lg text-slate-400 font-medium">/10</span></span>
+                            <span className="text-4xl font-black text-slate-900">
+                                {assessment.suitability_score}
+                                <span className="text-lg text-slate-400 font-medium">/{denominator}</span>
+                            </span>
                         </div>
                         <p className="text-sm font-medium text-slate-700 leading-relaxed italic">
                             "{assessment.verdict_statement}"
