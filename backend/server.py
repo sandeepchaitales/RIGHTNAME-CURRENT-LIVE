@@ -39,12 +39,12 @@ if not EMERGENT_KEY:
 
 llm_chat = None
 if LlmChat and EMERGENT_KEY:
-    # Switched to gpt-4o for better stability/budget handling
+    # Switched to gpt-4o-mini to reduce cost and latency while maintaining quality via prompt engineering
     llm_chat = LlmChat(
         api_key=EMERGENT_KEY,
         session_id="rightname_session",
         system_message=SYSTEM_PROMPT
-    ).with_model("openai", "gpt-4o")
+    ).with_model("openai", "gpt-4o-mini")
 
 # Create the main app
 app = FastAPI()
@@ -158,7 +158,7 @@ async def evaluate_brands(request: BrandEvaluationRequest):
         
         # Friendly error mapping
         if "Budget has been exceeded" in error_msg:
-            detail_msg = "LLM Budget Exceeded. Please top up your Emergent Key."
+            detail_msg = "LLM Budget Exceeded. The system has switched to a more efficient model to prevent this, but if it persists, please check your key balance."
         elif "502" in error_msg or "BadGateway" in error_msg:
             detail_msg = "AI Provider Overloaded (502). Please try again in a few seconds."
         else:
