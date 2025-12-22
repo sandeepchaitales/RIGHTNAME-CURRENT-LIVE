@@ -156,7 +156,12 @@ Return ONLY valid JSON.
       
       "domain_analysis": {
           "exact_match_status": "Status",
-          "alternatives": [{"domain": "...", "example": "..."}],
+          "alternatives": [
+              {"domain": "...", "example": "..."},
+              {"domain": "...", "example": "..."},
+              {"domain": "...", "example": "..."},
+              {"domain": "...", "example": "..."}
+          ],
           "strategy_note": "Strategic advice on acquisition."
       },
       
