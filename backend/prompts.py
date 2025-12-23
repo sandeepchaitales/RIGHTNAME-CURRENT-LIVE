@@ -99,13 +99,16 @@ Return ONLY valid JSON.
       ],
       
       "alternative_names": {
-        "reasoning": "REQUIRED IF VERDICT IS NO-GO OR REJECT. Explain the core concepts/essence of the original name and why alternatives are needed. E.g., 'Since DeepStory is taken by an AI company, try names that capture Depth + Wellness without the Tech baggage.'",
+        "poison_words": ["List the EXACT words from the original name that caused the conflict. E.g., ['Metro', 'Link'] if MetroLink conflicts with Metro brand"],
+        "reasoning": "REQUIRED IF VERDICT IS NO-GO OR REJECT. Explain: (1) Which word(s) are 'poison words' causing conflict, (2) What core concepts to preserve. E.g., 'The word Metro is toxic due to Metro trains and Metro Cash & Carry in India. Preserve the concepts of Urban + Retail without using Metro.'",
         "suggestions": [
-          {"name": "AlternativeName1", "rationale": "Why this captures the essence while avoiding conflicts"},
-          {"name": "AlternativeName2", "rationale": "Why this is a strong alternative"},
-          {"name": "AlternativeName3", "rationale": "Why this works for the category"}
+          {"name": "AlternativeName1", "rationale": "MUST NOT contain any poison words. Use synonyms or fresh concepts."},
+          {"name": "AlternativeName2", "rationale": "MUST NOT contain any poison words. Explain how it captures the essence differently."},
+          {"name": "AlternativeName3", "rationale": "MUST NOT contain any poison words. Show creative alternative approach."}
         ]
       },
+      
+      "CRITICAL_RULE_FOR_ALTERNATIVES": "NEVER include the poison word or any variation of it in suggestions. If 'Metro' is the problem, do NOT suggest MetroLink, MetroMart, MetroZone, etc. Use completely different words like Urban, City, Central, District, etc.",
       
       "competitor_analysis": {
           "competitors": [
