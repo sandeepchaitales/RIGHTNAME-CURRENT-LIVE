@@ -27,6 +27,30 @@ class DomainAnalysis(BaseModel):
     alternatives: List[Dict[str, str]]
     strategy_note: str
 
+class DomainCheckResult(BaseModel):
+    domain: str
+    status: str
+    available: Optional[bool] = None
+
+class MultiDomainAvailability(BaseModel):
+    category_domains: List[DomainCheckResult] = Field(default=[], description="Category-specific TLDs like .shop, .tech")
+    country_domains: List[DomainCheckResult] = Field(default=[], description="Country-specific TLDs like .in, .co.uk")
+    recommended_domain: Optional[str] = None
+    acquisition_strategy: Optional[str] = None
+
+class SocialHandleResult(BaseModel):
+    platform: str
+    handle: str
+    status: str
+    available: Optional[bool] = None
+
+class SocialAvailability(BaseModel):
+    handle: str
+    platforms: List[SocialHandleResult] = Field(default=[], description="Social platform availability")
+    available_platforms: List[str] = Field(default=[], description="List of available platforms")
+    taken_platforms: List[str] = Field(default=[], description="List of taken platforms")
+    recommendation: Optional[str] = None
+
 class VisibilityAnalysis(BaseModel):
     google_presence: List[Any] 
     app_store_presence: List[Any]
