@@ -434,7 +434,7 @@ Return ONLY valid JSON.
               {"domain": "brand.in", "status": "AVAILABLE/TAKEN", "available": true},
               {"domain": "brand.co.in", "status": "AVAILABLE/TAKEN", "available": false}
           ],
-          "recommended_domain": "The best available domain from the list - prioritize category TLDs",
+          "recommended_domain": "RULES FOR RECOMMENDED DOMAIN: 1) For Fashion/Apparel category → recommend .fashion, .style, .clothing, or .shop TLDs. 2) For Single Country market scope → recommend the country-specific TLD (e.g., .in for India, .co.uk for UK). 3) For E-commerce/Retail → recommend .shop or .store. 4) For Tech/SaaS → recommend .io, .tech, or .app. Always pick an AVAILABLE domain from the checked list.",
           "acquisition_strategy": "Strategy for acquiring domains. Note: .com is not mandatory for modern brands."
       },
 
