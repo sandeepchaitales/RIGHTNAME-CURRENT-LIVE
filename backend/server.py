@@ -196,6 +196,32 @@ async def evaluate_brands(request: BrandEvaluationRequest):
     
     visibility_context = "\n".join(visibility_data)
     
+    # 3. Check Multi-Domain Availability (category + country specific)
+    multi_domain_data = []
+    for brand in request.brand_names:
+        domain_result = await check_multi_domain_availability(brand, request.category, request.countries)
+        multi_domain_data.append(f"BRAND: {brand}")
+        multi_domain_data.append(f"Category TLDs checked: {domain_result['category_tlds_checked']}")
+        multi_domain_data.append(f"Country TLDs checked: {domain_result['country_tlds_checked']}")
+        for d in domain_result['checked_domains']:
+            status_icon = "✅" if d.get('available') else "❌"
+            multi_domain_data.append(f"  {status_icon} {d['domain']}: {d['status']}")
+        multi_domain_data.append("---")
+    
+    multi_domain_context = "\n".join(multi_domain_data)
+    
+    # 4. Check Social Handle Availability
+    social_data = []
+    for brand in request.brand_names:
+        social_result = await check_social_availability(brand, request.countries)
+        social_data.append(f"BRAND: {brand} (Handle: @{social_result['handle']})")
+        for p in social_result['platforms_checked']:
+            status_icon = "✅" if p.get('available') else "❌" if p.get('available') == False else "❓"
+            social_data.append(f"  {status_icon} {p['platform']}: {p['status']}")
+        social_data.append("---")
+    
+    social_context = "\n".join(social_data)
+    
     # Construct User Message
     user_prompt = f"""
     Evaluate the following brands:
@@ -208,6 +234,14 @@ async def evaluate_brands(request: BrandEvaluationRequest):
     REAL-TIME DOMAIN AVAILABILITY DATA (DO NOT HALLUCINATE):
     {domain_context}
     INSTRUCTION: Use the above domain data for 'domain_analysis'.
+
+    REAL-TIME MULTI-DOMAIN AVAILABILITY (Category & Country Specific):
+    {multi_domain_context}
+    INSTRUCTION: Include this data in 'multi_domain_availability' field. Show which domains are available/taken based on category ({request.category}) and countries ({request.countries}).
+
+    REAL-TIME SOCIAL HANDLE AVAILABILITY:
+    {social_context}
+    INSTRUCTION: Include this data in 'social_availability' field. Show which social platforms have the handle available/taken.
 
     REAL-TIME SEARCH & APP STORE VISIBILITY DATA:
     {visibility_context}
