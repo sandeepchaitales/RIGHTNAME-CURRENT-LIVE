@@ -96,7 +96,7 @@ export const VisibilityAnalysisCard = ({ analysis }) => {
                         <ul className="space-y-2">
                             {analysis.google_presence.slice(0, 3).map((item, i) => (
                                 <li key={i} className="text-sm bg-slate-50 p-3 rounded-lg text-slate-700 font-medium truncate">
-                                    {item}
+                                    {typeof item === 'string' ? item : (item?.name || item?.title || JSON.stringify(item))}
                                 </li>
                             ))}
                         </ul>
@@ -112,7 +112,7 @@ export const VisibilityAnalysisCard = ({ analysis }) => {
                         <ul className="space-y-2">
                             {analysis.app_store_presence.slice(0, 3).map((item, i) => (
                                 <li key={i} className="text-sm bg-slate-50 p-3 rounded-lg text-slate-700 font-medium truncate">
-                                    {item}
+                                    {typeof item === 'string' ? item : (item?.name || item?.title || JSON.stringify(item))}
                                 </li>
                             ))}
                         </ul>
