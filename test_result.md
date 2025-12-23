@@ -196,3 +196,5 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Fixed the critical P0 bug - JSON parsing was failing due to: 1) Missing comma in prompts.py between rebranding_probability and overall_assessment, 2) Literal newlines in JSON string values from LLM needed to be escaped. Added escape_newlines_in_json_strings() and repair_json() functions. API is now working - tested with multiple brand names successfully. Please verify the full E2E flow."
+  - agent: "main"
+    message: "Fixed schema validation error for TrademarkRiskMatrix - the LLM was omitting rebranding_probability field. Made all TrademarkRiskMatrix fields Optional with defaults to handle LLM inconsistencies. Also installed framer-motion dependency. Backend logs show successful requests now completing. Please test the full E2E flow from landing page form submission to dashboard display."
