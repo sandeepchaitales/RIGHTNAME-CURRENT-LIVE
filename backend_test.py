@@ -111,7 +111,7 @@ class BrandEvaluationTester:
                 return False
                 
         except requests.exceptions.Timeout:
-            self.log_test("Evaluate Endpoint - Timeout", False, "Request timed out after 60 seconds")
+            self.log_test("Evaluate Endpoint - Timeout", False, "Request timed out after 120 seconds")
             return False
         except Exception as e:
             self.log_test("Evaluate Endpoint - Exception", False, str(e))
