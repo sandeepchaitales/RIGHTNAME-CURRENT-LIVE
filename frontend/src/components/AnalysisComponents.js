@@ -6,8 +6,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Lightbulb, AlertTriangle, ArrowUpRight, Minus, TrendingUp, Info, DollarSign, Sparkles, Scale } from "lucide-react";
+import { CheckCircle2, Lightbulb, AlertTriangle, ArrowUpRight, Minus, TrendingUp, Info, DollarSign, Sparkles, Scale, Globe, Instagram, Twitter, Facebook, Youtube, Linkedin, XCircle, HelpCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+
+// --- Design System Tokens ---
+const CARD_STYLE = "bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden";
 
 // --- Design System Tokens ---
 const CARD_STYLE = "bg-white border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl overflow-hidden";
