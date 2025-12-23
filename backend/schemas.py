@@ -84,12 +84,26 @@ class CountryAnalysis(BaseModel):
 
 class Competitor(BaseModel):
     name: str
-    price_axis: str = Field(..., description="X-Axis: Price (Low/Mid/High)")
-    modernity_axis: str = Field(..., description="Y-Axis: Modernity (Traditional/Fusion/Modern)")
+    x_coordinate: Optional[float] = Field(default=50, description="X-axis position 0-100")
+    y_coordinate: Optional[float] = Field(default=50, description="Y-axis position 0-100")
+    price_position: Optional[str] = Field(default=None, description="Price positioning description")
+    category_position: Optional[str] = Field(default=None, description="Category-specific positioning")
     quadrant: str = Field(..., description="Quadrant Name")
+    # Legacy fields for backward compatibility
+    price_axis: Optional[str] = Field(default=None, description="Legacy: X-Axis description")
+    modernity_axis: Optional[str] = Field(default=None, description="Legacy: Y-Axis description")
+
+class UserBrandPosition(BaseModel):
+    x_coordinate: float = Field(default=50, description="X-axis position 0-100")
+    y_coordinate: float = Field(default=50, description="Y-axis position 0-100")
+    quadrant: str
+    rationale: Optional[str] = None
 
 class CompetitorAnalysis(BaseModel):
+    x_axis_label: Optional[str] = Field(default="Price: Low → High", description="X-axis label")
+    y_axis_label: Optional[str] = Field(default="Quality: Basic → Premium", description="Y-axis label")
     competitors: List[Competitor]
+    user_brand_position: Optional[UserBrandPosition] = None
     white_space_analysis: str
     strategic_advantage: str
     suggested_pricing: str
