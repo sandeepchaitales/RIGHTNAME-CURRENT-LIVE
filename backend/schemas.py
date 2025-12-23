@@ -9,18 +9,18 @@ class DimensionScore(BaseModel):
     reasoning: str
 
 class TrademarkRiskRow(BaseModel):
-    likelihood: int
-    severity: int
-    zone: str 
-    commentary: str
+    likelihood: int = Field(default=1)
+    severity: int = Field(default=1)
+    zone: str = Field(default="Green")
+    commentary: str = Field(default="No specific risk identified")
 
 class TrademarkRiskMatrix(BaseModel):
-    genericness: TrademarkRiskRow
-    existing_conflicts: TrademarkRiskRow
-    phonetic_similarity: TrademarkRiskRow
-    relevant_classes: TrademarkRiskRow
-    rebranding_probability: TrademarkRiskRow
-    overall_assessment: str
+    genericness: Optional[TrademarkRiskRow] = Field(default_factory=lambda: TrademarkRiskRow())
+    existing_conflicts: Optional[TrademarkRiskRow] = Field(default_factory=lambda: TrademarkRiskRow())
+    phonetic_similarity: Optional[TrademarkRiskRow] = Field(default_factory=lambda: TrademarkRiskRow())
+    relevant_classes: Optional[TrademarkRiskRow] = Field(default_factory=lambda: TrademarkRiskRow())
+    rebranding_probability: Optional[TrademarkRiskRow] = Field(default_factory=lambda: TrademarkRiskRow())
+    overall_assessment: str = Field(default="Risk assessment pending")
 
 class DomainAnalysis(BaseModel):
     exact_match_status: str
