@@ -224,7 +224,24 @@ const Dashboard = () => {
                     </div>
                 </section>
 
-                {/* 4. MARKET INTELLIGENCE */}
+                {/* 4.5 DOMAIN & SOCIAL AVAILABILITY */}
+                {(brand.multi_domain_availability || brand.social_availability) && (
+                    <section className="print:break-inside-avoid">
+                        <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+                            <Globe className="w-5 h-5 text-blue-500" /> Digital Presence Check
+                        </h3>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {brand.multi_domain_availability && (
+                                <MultiDomainCard data={brand.multi_domain_availability} />
+                            )}
+                            {brand.social_availability && (
+                                <SocialAvailabilityCard data={brand.social_availability} />
+                            )}
+                        </div>
+                    </section>
+                )}
+
+                {/* 5. MARKET INTELLIGENCE */}
                 <section className="print:break-before-page">
                     <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
                         <Globe className="w-5 h-5 text-slate-400" /> Market Intelligence
