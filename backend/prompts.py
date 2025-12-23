@@ -98,6 +98,15 @@ Return ONLY valid JSON.
         "Detailed Risk 2 (with mitigation)"
       ],
       
+      "alternative_names": {
+        "reasoning": "REQUIRED IF VERDICT IS NO-GO OR REJECT. Explain the core concepts/essence of the original name and why alternatives are needed. E.g., 'Since DeepStory is taken by an AI company, try names that capture Depth + Wellness without the Tech baggage.'",
+        "suggestions": [
+          {"name": "AlternativeName1", "rationale": "Why this captures the essence while avoiding conflicts"},
+          {"name": "AlternativeName2", "rationale": "Why this is a strong alternative"},
+          {"name": "AlternativeName3", "rationale": "Why this works for the category"}
+        ]
+      },
+      
       "competitor_analysis": {
           "competitors": [
               {
