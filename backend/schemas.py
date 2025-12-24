@@ -179,7 +179,7 @@ class BrandEvaluationRequest(BaseModel):
     product_type: Optional[str] = Field(default="Digital", description="Physical, Digital, Service, Hybrid")
     usp: Optional[str] = Field(default=None, description="Unique Selling Proposition")
     brand_vibe: Optional[str] = Field(default=None, description="Brand personality/vibe")
-    positioning: Literal["Mass", "Premium", "Ultra-Premium"]
+    positioning: Literal["Budget", "Mid-Range", "Premium", "Luxury", "Mass", "Ultra-Premium"]
     market_scope: Literal["Single Country", "Multi-Country", "Global"]
     countries: List[str]
 
