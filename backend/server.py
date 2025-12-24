@@ -169,6 +169,11 @@ def repair_json(s):
     
     return s
 
+# Health check endpoint for Kubernetes
+@api_router.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
 @api_router.get("/")
 async def root():
     return {"message": "RightName API is running"}
