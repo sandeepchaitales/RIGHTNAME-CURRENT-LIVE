@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../contexts/AuthContext';
@@ -10,6 +10,58 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Sparkles, ShieldCheck, Globe2, BrainCircuit, Search, ArrowRight, Zap, AlertCircle, LogIn, LogOut, User, CheckCircle, Star, Rocket, Target, Trophy, Heart, TrendingUp, Users, Building2, Briefcase } from "lucide-react";
 import { toast } from "sonner";
+
+// Dynamic Cycling "Trusted By" Component
+const TrustedByCycler = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  
+  const trustedBy = [
+    { text: "Brand Consultants", icon: Users, color: "text-violet-600", bg: "bg-violet-100" },
+    { text: "Startup Founders", icon: Rocket, color: "text-fuchsia-600", bg: "bg-fuchsia-100" },
+    { text: "Consulting Firms", icon: Building2, color: "text-orange-500", bg: "bg-orange-100" },
+    { text: "Marketing Agencies", icon: Briefcase, color: "text-emerald-600", bg: "bg-emerald-100" },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % trustedBy.length);
+        setIsAnimating(false);
+      }, 300);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [trustedBy.length]);
+
+  const current = trustedBy[currentIndex];
+  const Icon = current.icon;
+
+  return (
+    <div className="flex flex-col items-center gap-2 mb-8">
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Trusted By</p>
+      <div className="relative h-10 flex items-center justify-center min-w-[220px]">
+        <div 
+          className={`flex items-center gap-2 px-5 py-2 rounded-full bg-white border-2 border-slate-100 shadow-lg transition-all duration-300 ${isAnimating ? 'opacity-0 transform translate-y-2' : 'opacity-100 transform translate-y-0'}`}
+        >
+          <div className={`w-7 h-7 rounded-full ${current.bg} flex items-center justify-center`}>
+            <Icon className={`w-4 h-4 ${current.color}`} />
+          </div>
+          <span className="font-bold text-slate-800 text-sm whitespace-nowrap">{current.text}</span>
+        </div>
+      </div>
+      {/* Progress dots */}
+      <div className="flex gap-1.5 mt-1">
+        {trustedBy.map((_, idx) => (
+          <div 
+            key={idx} 
+            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'bg-violet-500 w-4' : 'bg-slate-300'}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 // Animated floating badge component
 const FloatingBadge = ({ children, className, delay = 0 }) => (
