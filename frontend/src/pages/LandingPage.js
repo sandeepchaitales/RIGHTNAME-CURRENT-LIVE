@@ -185,9 +185,34 @@ const LandingPage = () => {
                 </div>
                 <h1 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600 tracking-tight">RIGHTNAME</h1>
             </div>
-            <Badge variant="outline" className="hidden md:flex border-violet-200 text-violet-700 px-4 py-1.5 rounded-full font-bold bg-white">
-                v2.2 Research Mode
-            </Badge>
+            <div className="flex items-center gap-3">
+                <Badge variant="outline" className="hidden md:flex border-violet-200 text-violet-700 px-4 py-1.5 rounded-full font-bold bg-white">
+                    v2.2 Research Mode
+                </Badge>
+                {authLoading ? (
+                    <div className="w-8 h-8 rounded-full bg-slate-100 animate-pulse" />
+                ) : user ? (
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-full">
+                            {user.picture ? (
+                                <img src={user.picture} alt={user.name} className="w-6 h-6 rounded-full" />
+                            ) : (
+                                <User className="w-5 h-5 text-slate-500" />
+                            )}
+                            <span className="text-sm font-medium text-slate-700 hidden sm:inline">{user.name?.split(' ')[0]}</span>
+                        </div>
+                        <Button variant="outline" size="sm" onClick={logout} className="text-slate-600">
+                            <LogOut className="w-4 h-4 mr-1" />
+                            <span className="hidden sm:inline">Sign Out</span>
+                        </Button>
+                    </div>
+                ) : (
+                    <Button onClick={login} className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white font-bold shadow-lg shadow-violet-200">
+                        <LogIn className="w-4 h-4 mr-2" />
+                        Sign in with Google
+                    </Button>
+                )}
+            </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
