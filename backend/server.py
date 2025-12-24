@@ -509,6 +509,11 @@ async def logout(request: Request, response: Response):
 
 app.include_router(api_router)
 
+# Root-level health check endpoint for Kubernetes (no /api prefix)
+@app.get("/health")
+async def root_health_check():
+    return {"status": "healthy"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
