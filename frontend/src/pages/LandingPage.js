@@ -38,24 +38,24 @@ const TrustedByCycler = () => {
   const Icon = current.icon;
 
   return (
-    <div className="flex flex-col items-center gap-2 mb-8">
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Trusted By</p>
-      <div className="relative h-10 flex items-center justify-center min-w-[220px]">
+    <div className="flex flex-col items-center gap-1.5 mt-5">
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Trusted By</p>
+      <div className="relative h-9 flex items-center justify-center min-w-[200px]">
         <div 
-          className={`flex items-center gap-2 px-5 py-2 rounded-full bg-white border-2 border-slate-100 shadow-lg transition-all duration-300 ${isAnimating ? 'opacity-0 transform translate-y-2' : 'opacity-100 transform translate-y-0'}`}
+          className={`flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-50 border border-slate-200 transition-all duration-300 ${isAnimating ? 'opacity-0 transform translate-y-2' : 'opacity-100 transform translate-y-0'}`}
         >
-          <div className={`w-7 h-7 rounded-full ${current.bg} flex items-center justify-center`}>
-            <Icon className={`w-4 h-4 ${current.color}`} />
+          <div className={`w-6 h-6 rounded-full ${current.bg} flex items-center justify-center`}>
+            <Icon className={`w-3.5 h-3.5 ${current.color}`} />
           </div>
-          <span className="font-bold text-slate-800 text-sm whitespace-nowrap">{current.text}</span>
+          <span className="font-bold text-slate-700 text-sm whitespace-nowrap">{current.text}</span>
         </div>
       </div>
       {/* Progress dots */}
-      <div className="flex gap-1.5 mt-1">
+      <div className="flex gap-1 mt-0.5">
         {trustedBy.map((_, idx) => (
           <div 
             key={idx} 
-            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'bg-violet-500 w-4' : 'bg-slate-300'}`}
+            className={`w-1 h-1 rounded-full transition-all duration-300 ${idx === currentIndex ? 'bg-violet-500 w-3' : 'bg-slate-300'}`}
           />
         ))}
       </div>
