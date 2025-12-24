@@ -23,6 +23,7 @@ const FeatureCard = ({ icon: Icon, title, description, color }) => (
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { user, loading: authLoading, login, logout } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     brand_names: '',
