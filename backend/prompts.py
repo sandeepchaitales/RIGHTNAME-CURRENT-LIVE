@@ -492,10 +492,46 @@ Return ONLY valid JSON.
               "white_space_analysis": "Market gap in India - which position is underserved",
               "strategic_advantage": "Key advantage for entering Indian market",
               "market_entry_recommendation": "Specific recommendation for India market entry"
+          },
+          {
+              "country": "UK",
+              "country_flag": "🇬🇧",
+              "x_axis_label": "Price: Budget → Premium",
+              "y_axis_label": "Style: Traditional → Modern",
+              "competitors": [
+                  {"name": "Top UK Competitor 1", "x_coordinate": 75, "y_coordinate": 60, "price_position": "Premium", "category_position": "Modern", "quadrant": "Premium Modern"},
+                  {"name": "Top UK Competitor 2", "x_coordinate": 45, "y_coordinate": 55, "price_position": "Mid-range", "category_position": "Balanced", "quadrant": "Value Mid"},
+                  {"name": "Top UK Competitor 3", "x_coordinate": 80, "y_coordinate": 35, "price_position": "Luxury", "category_position": "Classic", "quadrant": "Heritage Luxury"}
+              ],
+              "user_brand_position": {"x_coordinate": 60, "y_coordinate": 68, "quadrant": "Target Position", "rationale": "Why this position works in the UK market"},
+              "white_space_analysis": "Market gap in the UK - which position is underserved",
+              "strategic_advantage": "Key advantage for entering UK market",
+              "market_entry_recommendation": "Specific recommendation for UK market entry"
+          },
+          {
+              "country": "Germany",
+              "country_flag": "🇩🇪",
+              "x_axis_label": "Price: Budget → Premium",
+              "y_axis_label": "Style: Traditional → Modern",
+              "competitors": [
+                  {"name": "Top Germany Competitor 1", "x_coordinate": 65, "y_coordinate": 50, "price_position": "Premium", "category_position": "Quality-focused", "quadrant": "Premium Quality"},
+                  {"name": "Top Germany Competitor 2", "x_coordinate": 35, "y_coordinate": 45, "price_position": "Value", "category_position": "Practical", "quadrant": "Value Practical"},
+                  {"name": "Top Germany Competitor 3", "x_coordinate": 85, "y_coordinate": 40, "price_position": "Luxury", "category_position": "Engineering", "quadrant": "Luxury Engineering"}
+              ],
+              "user_brand_position": {"x_coordinate": 58, "y_coordinate": 62, "quadrant": "Target Position", "rationale": "Why this position works in the German market"},
+              "white_space_analysis": "Market gap in Germany - which position is underserved",
+              "strategic_advantage": "Key advantage for entering German market",
+              "market_entry_recommendation": "Specific recommendation for Germany market entry"
           }
       ],
       
-      "COUNTRY_ANALYSIS_RULE": "Generate country_competitor_analysis for UP TO 4 countries from the user's selected countries. Each country should have REAL local competitors specific to that market. Use appropriate local competitor brands.",
+      "COUNTRY_ANALYSIS_RULE_MANDATORY": "⚠️ CRITICAL REQUIREMENT: You MUST generate country_competitor_analysis for EVERY country the user has selected. If user selected 4 countries, you MUST provide analysis for ALL 4 countries. If user selected 3 countries, provide analysis for ALL 3 countries. DO NOT skip any country. Each country MUST have: country name, country_flag emoji, 3 REAL local competitors with coordinates, user_brand_position, white_space_analysis, strategic_advantage, and market_entry_recommendation. Use REAL competitor brand names that operate in each specific country.",
+      
+      "COUNTRY_FLAGS_REFERENCE": {
+          "USA": "🇺🇸", "India": "🇮🇳", "UK": "🇬🇧", "Germany": "🇩🇪", "France": "🇫🇷", 
+          "Japan": "🇯🇵", "China": "🇨🇳", "Australia": "🇦🇺", "Canada": "🇨🇦", "Brazil": "🇧🇷",
+          "Singapore": "🇸🇬", "UAE": "🇦🇪", "South Korea": "🇰🇷", "Italy": "🇮🇹", "Spain": "🇪🇸"
+      },
       
       "PRICING_RULE": "Do NOT recommend pricing strategies for brand names with REJECT or NO-GO verdicts. It is illogical to suggest how to price a product with a name you are recommending they abandon.",
       
