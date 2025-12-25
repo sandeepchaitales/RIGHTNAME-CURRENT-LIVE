@@ -146,6 +146,9 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error('Logout error:', error);
         }
+        // Clear localStorage auth data
+        localStorage.removeItem('user_authenticated');
+        localStorage.removeItem('user_data');
         setUser(null);
         window.location.href = '/';
     };
