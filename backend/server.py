@@ -197,6 +197,17 @@ async def evaluate_brands(request: BrandEvaluationRequest):
         domain_statuses.append(f"- {brand}: {status}")
     domain_context = "\n".join(domain_statuses)
 
+    # 1.5 STRING SIMILARITY CHECK (Levenshtein + Jaro-Winkler)
+    similarity_data = []
+    similarity_should_reject = {}
+    for brand in request.brand_names:
+        sim_result = check_brand_similarity(brand, request.industry or "", request.category)
+        similarity_data.append(format_similarity_report(sim_result))
+        if sim_result['should_reject']:
+            similarity_should_reject[brand] = sim_result
+    
+    similarity_context = "\n\n".join(similarity_data)
+    
     # 2. Check Visibility
     visibility_data = []
     for brand in request.brand_names:
