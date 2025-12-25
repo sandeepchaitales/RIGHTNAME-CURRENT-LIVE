@@ -169,6 +169,18 @@ frontend:
         agent: "main"
         comment: "Fixed Legal Risk Matrix - now properly reads 'likelihood' field (was looking for 'probability'), and displays 'commentary' field as mitigation strategy. Fixed Social Handles - now shows ALL platforms with their status (Available/Taken/Error/Unsupported), not just available ones. Added count badges showing total available vs taken handles."
 
+  - task: "Country-Specific Competitor Analysis"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Dashboard.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added country-specific competitor analysis feature. Backend schema updated with CountryCompetitorAnalysis model. Prompts.py updated to generate competitor analysis for up to 4 countries. Frontend updated with new CompetitiveLandscapeSection that shows both global and country-specific positioning matrices with unique color schemes per country."
+
   - task: "PDF Export"
     implemented: true
     working: "NA"
