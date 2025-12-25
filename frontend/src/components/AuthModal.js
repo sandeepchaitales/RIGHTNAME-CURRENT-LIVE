@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, Mail, Lock, User, X, Sparkles } from "lucide-react";
 import { toast } from "sonner";
+import { ReportPreviewCompact } from './ReportPreview';
 
 const AuthModal = () => {
     const { showAuthModal, closeAuthModal, loginWithGoogle, loginWithEmail, registerWithEmail } = useAuth();
