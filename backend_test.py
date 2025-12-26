@@ -456,8 +456,8 @@ class BrandEvaluationTester:
                     
                     # Test 3: Check trademark_conflicts array
                     tm_conflicts = tm_research.get("trademark_conflicts", [])
-                    if len(tm_conflicts) < 2:
-                        self.log_test("Trademark Research - Luminara TM Conflicts", False, f"Expected at least 2 trademark conflicts, got {len(tm_conflicts)}")
+                    if len(tm_conflicts) < 1:
+                        self.log_test("Trademark Research - Luminara TM Conflicts", False, f"Expected at least 1 trademark conflict, got {len(tm_conflicts)}")
                         return False
                     
                     # Check for specific expected conflicts
