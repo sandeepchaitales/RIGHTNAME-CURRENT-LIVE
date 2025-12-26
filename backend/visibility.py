@@ -217,34 +217,37 @@ def search_app_stores_comprehensive(brand_name: str, category: str = "", industr
     phonetic_variants = generate_phonetic_variants(brand_name)
     logger.info(f"Phonetic variants for '{brand_name}': {phonetic_variants}")
     
-    # Strategy 1: Exact brand name search (multiple countries)
+    # Strategy 1: Exact brand name search (primary country only to reduce API calls)
     logger.info(f"App search Strategy 1: Exact brand name '{brand_name}'")
     results["search_queries_used"].append(f"Exact: {brand_name}")
     
-    for country in ['us', 'in', 'gb']:  # Search US, India, UK
-        exact_results = get_play_store_results(brand_name, country=country)
-        for app in exact_results:
-            app_id = app.get("appId", "")
-            if app_id and app_id not in seen_app_ids:
-                seen_app_ids.add(app_id)
-                app_title_lower = app.get("title", "").lower()
-                brand_lower = brand_name.lower()
-                
-                # Check if app title contains brand name (case insensitive)
-                if brand_lower in app_title_lower:
-                    app["match_type"] = "EXACT"
-                    results["exact_matches"].append(app)
-                    results["potential_conflicts"].append(app)
-                # Also check phonetic variants in title
-                elif any(v.lower() in app_title_lower for v in phonetic_variants):
-                    matched_variant = next((v for v in phonetic_variants if v.lower() in app_title_lower), "")
-                    app["match_type"] = "PHONETIC_EXACT"
-                    app["phonetic_variant"] = matched_variant
-                    results["phonetic_matches"].append(app)
-                    results["potential_conflicts"].append(app)
-                else:
-                    app["match_type"] = "PARTIAL"
-                    results["category_competitors"].append(app)
+    # Search primary country first
+    exact_results = get_play_store_results(brand_name, country='us')
+    # Also try India if the brand might be India-specific
+    exact_results.extend(get_play_store_results(brand_name, country='in'))
+    
+    for app in exact_results:
+        app_id = app.get("appId", "")
+        if app_id and app_id not in seen_app_ids:
+            seen_app_ids.add(app_id)
+            app_title_lower = app.get("title", "").lower()
+            brand_lower = brand_name.lower()
+            
+            # Check if app title contains brand name (case insensitive)
+            if brand_lower in app_title_lower:
+                app["match_type"] = "EXACT"
+                results["exact_matches"].append(app)
+                results["potential_conflicts"].append(app)
+            # Also check phonetic variants in title
+            elif any(v.lower() in app_title_lower for v in phonetic_variants):
+                matched_variant = next((v for v in phonetic_variants if v.lower() in app_title_lower), "")
+                app["match_type"] = "PHONETIC_EXACT"
+                app["phonetic_variant"] = matched_variant
+                results["phonetic_matches"].append(app)
+                results["potential_conflicts"].append(app)
+            else:
+                app["match_type"] = "PARTIAL"
+                results["category_competitors"].append(app)
     
     # Strategy 2: Brand + category combined search
     if category_keywords:
