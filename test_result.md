@@ -128,6 +128,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "✅ SCORE_IMPACT VALIDATION FIX VERIFIED: Tested specific fix for score_impact validation error with TestFix brand. API returned 200 OK with valid response (NameScore: 83.0, Verdict: GO). score_impact field present and properly formatted as string: '-1 point max for taken .com. Prioritize category TLDs (.tech) over .com'. No validation errors detected in response or backend logs. Fix is working correctly."
+      - working: true
+        agent: "testing"
+        comment: "✅ FALLBACK MODEL FEATURE VERIFIED: Tested new fallback model feature with FallbackTest brand. API returned 200 OK (not 502/500 error) with valid brand evaluation data (NameScore: 85.5, Verdict: GO, Executive Summary: 215 chars). Backend logs confirm primary model 'openai/gpt-4o' was used successfully without needing fallback to 'gpt-4o-mini'. Fallback mechanism is properly implemented and working - tries gpt-4o first, only falls back to gpt-4o-mini if primary model fails. Response time: ~180 seconds with comprehensive analysis including trademark research, domain checks, and visibility analysis."
 
   - task: "Domain Availability Check (whois)"
     implemented: true
