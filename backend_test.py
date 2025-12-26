@@ -1765,10 +1765,10 @@ class BrandEvaluationTester:
 def main():
     tester = BrandEvaluationTester()
     
-    # Run Country-Specific Legal Precedents tests as per review request
-    print("⚖️ FOCUSED TESTING: Country-Specific Legal Precedents in RIGHTNAME API")
+    # Run QuickTest smoke test as per review request
+    print("🔍 QUICKTEST SMOKE TEST: Testing RIGHTNAME brand evaluation API")
     print("=" * 80)
-    print("🔍 TESTING: USA should show US court cases, India should show Indian court cases")
+    print("🎯 TESTING: QuickTest brand evaluation with schema fix verification")
     print("=" * 80)
     
     # Test API health first
@@ -1776,33 +1776,42 @@ def main():
         print("❌ API health check failed, stopping tests")
         return 1
     
-    # PRIORITY: Test country-specific legal precedents as per review request
-    print("\n⚖️ COUNTRY-SPECIFIC LEGAL PRECEDENTS TESTS:")
-    print("Testing that legal precedents match the selected country's jurisdiction...")
+    # PRIORITY: Run QuickTest smoke test as per review request
+    print("\n🔍 QUICKTEST SMOKE TEST:")
+    print("Testing brand evaluation API with QuickTest payload...")
     
-    # Test Case 1: USA - should show US court cases
-    tester.test_country_specific_legal_precedents_usa()
-    
-    # Test Case 2: India - should show Indian court cases  
-    tester.test_country_specific_legal_precedents_india()
+    # Run the specific test requested
+    success = tester.test_quicktest_smoke_test()
     
     # Print summary
-    print(f"\n📊 Legal Precedents Test Summary:")
+    print(f"\n📊 QuickTest Smoke Test Summary:")
     print(f"Tests Run: {tester.tests_run}")
     print(f"Tests Passed: {tester.tests_passed}")
     print(f"Success Rate: {(tester.tests_passed/tester.tests_run)*100:.1f}%")
     
-    success = tester.tests_passed == tester.tests_run
-    
     # Save detailed results
     with open('/app/backend_test_results.json', 'w') as f:
         json.dump({
-            "test_focus": "Country-Specific Legal Precedents Testing",
-            "description": "Testing that legal precedents are relevant to the selected country's jurisdiction",
+            "test_focus": "QuickTest Smoke Test for RIGHTNAME API",
+            "description": "Quick smoke test to verify RIGHTNAME brand evaluation API is working after schema fix",
+            "test_case": {
+                "brand_names": ["QuickTest"],
+                "category": "Technology", 
+                "positioning": "Premium",
+                "market_scope": "Single Country",
+                "countries": ["USA"]
+            },
+            "verification_points": [
+                "API returns successful response (200 OK)",
+                "Response contains brand_scores with namescore and verdict", 
+                "No validation errors (especially for score_impact field)",
+                "Legal precedents contain USA cases (like Polaroid Corp.)"
+            ],
             "summary": {
                 "tests_run": tester.tests_run,
                 "tests_passed": tester.tests_passed,
-                "success_rate": (tester.tests_passed/tester.tests_run)*100 if tester.tests_run > 0 else 0
+                "success_rate": (tester.tests_passed/tester.tests_run)*100 if tester.tests_run > 0 else 0,
+                "overall_success": success
             },
             "results": tester.test_results,
             "timestamp": datetime.now().isoformat()
