@@ -119,6 +119,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "COMPREHENSIVE TESTING COMPLETED: ✅ Trademark Research Feature fully functional. Test Case 1 (Luminara): Risk 6/10, found trademark conflicts (Luminara Elixir App#6346642), company conflicts (Luminara Enterprises CIN:U85500TZ2025PTC036174), legal precedents, registration timeline (12-18 months), mitigation strategies, Nice Class 25 (Clothing). Test Case 2 (Nexofy): Low risk 1/10, 90% success probability, Nice Class 42 (SaaS). All required fields present: trademark_research, registration_timeline, mitigation_strategies. API response time 60-120 seconds due to real-time web searches."
+      - working: true
+        agent: "testing"
+        comment: "✅ CURRENCY LOGIC TESTING COMPLETED: All 3 test cases passed with 100% success rate. Test Case 1 (USA Single Country): All costs correctly in USD ($). Test Case 2 (India Single Country): All costs correctly in INR (₹). Test Case 3 (Multiple Countries USA/India/UK): All costs correctly in USD ($) as expected for multi-country. Verified: registration_timeline.filing_cost, registration_timeline.opposition_defense_cost, mitigation_strategies[].estimated_cost all use correct currency. No currency mixing detected. Currency mapping logic working perfectly."
 
   - task: "Domain Availability Check (whois)"
     implemented: true
