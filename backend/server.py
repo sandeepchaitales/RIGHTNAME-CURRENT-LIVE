@@ -900,10 +900,20 @@ async def evaluate_brands(request: BrandEvaluationRequest):
     max_retries = 3
     last_error = None
     
-    for attempt in range(max_retries):
-        try:
-            user_message = UserMessage(text=user_prompt)
-            response = await llm_chat.send_message(user_message)
+    # Try each model with retries
+    for model_provider, model_name in models_to_try:
+        logging.info(f"Trying LLM model: {model_provider}/{model_name}")
+        
+        llm_chat = LlmChat(
+            api_key=EMERGENT_KEY,
+            session_id=f"rightname_{uuid.uuid4()}",
+            system_message=SYSTEM_PROMPT
+        ).with_model(model_provider, model_name)
+        
+        for attempt in range(max_retries):
+            try:
+                user_message = UserMessage(text=user_prompt)
+                response = await llm_chat.send_message(user_message)
             
             content = ""
             if hasattr(response, 'text'):
