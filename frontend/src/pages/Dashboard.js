@@ -1681,6 +1681,22 @@ const Dashboard = () => {
                     </section>
                 )}
 
+                {/* SECTION 10: TRADEMARK RESEARCH (NEW - Perplexity-Level Analysis) */}
+                {brand.trademark_research && (
+                    <section className="print-section">
+                        <SectionHeader icon={Shield} title="Trademark Research Intelligence" subtitle="Real-Time Conflict Discovery & Risk Analysis" color="violet" badge="NEW" />
+                        {isAuthenticated ? (
+                            <TrademarkResearchSection 
+                                trademarkResearch={brand.trademark_research} 
+                                registrationTimeline={brand.registration_timeline}
+                                mitigationStrategies={brand.mitigation_strategies}
+                            />
+                        ) : (
+                            <LockedSection title="Trademark Research Intelligence" onUnlock={handleRegister} />
+                        )}
+                    </section>
+                )}
+
                 {/* Bottom CTA */}
                 {!isAuthenticated && (
                     <section className="no-print text-center py-8">
