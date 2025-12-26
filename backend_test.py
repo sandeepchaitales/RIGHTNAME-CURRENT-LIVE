@@ -1517,6 +1517,156 @@ class BrandEvaluationTester:
             self.log_test("Legal Precedents India - Exception", False, str(e))
             return False
 
+    def test_quicktest_smoke_test(self):
+        """Quick smoke test for RIGHTNAME brand evaluation API with QuickTest"""
+        payload = {
+            "brand_names": ["QuickTest"],
+            "category": "Technology",
+            "positioning": "Premium",
+            "market_scope": "Single Country",
+            "countries": ["USA"]
+        }
+        
+        try:
+            print(f"\n🔍 QUICKTEST SMOKE TEST: Testing RIGHTNAME brand evaluation API...")
+            print(f"Payload: {json.dumps(payload, indent=2)}")
+            
+            response = requests.post(
+                f"{self.api_url}/evaluate", 
+                json=payload, 
+                headers={'Content-Type': 'application/json'},
+                timeout=120  # Allow up to 120 seconds as requested
+            )
+            
+            print(f"Response Status: {response.status_code}")
+            
+            # Test 1: API returns successful response (200 OK)
+            if response.status_code != 200:
+                error_msg = f"HTTP {response.status_code}: {response.text[:300]}"
+                self.log_test("QuickTest Smoke - HTTP Status", False, error_msg)
+                return False
+            
+            try:
+                data = response.json()
+                print(f"✅ Response received successfully (200 OK)")
+                
+                # Test 2: Response contains brand_scores with namescore and verdict
+                if not data.get("brand_scores") or len(data["brand_scores"]) == 0:
+                    self.log_test("QuickTest Smoke - Brand Scores", False, "No brand_scores returned")
+                    return False
+                
+                brand = data["brand_scores"][0]
+                
+                # Check namescore field
+                if "namescore" not in brand:
+                    self.log_test("QuickTest Smoke - NameScore Field", False, "namescore field missing from brand_scores")
+                    return False
+                
+                namescore = brand.get("namescore")
+                if not isinstance(namescore, (int, float)) or not (0 <= namescore <= 100):
+                    self.log_test("QuickTest Smoke - NameScore Value", False, f"Invalid namescore: {namescore} (should be 0-100)")
+                    return False
+                
+                # Check verdict field
+                if "verdict" not in brand:
+                    self.log_test("QuickTest Smoke - Verdict Field", False, "verdict field missing from brand_scores")
+                    return False
+                
+                verdict = brand.get("verdict", "")
+                valid_verdicts = ["APPROVE", "CAUTION", "REJECT"]
+                if verdict not in valid_verdicts:
+                    self.log_test("QuickTest Smoke - Verdict Value", False, f"Invalid verdict: {verdict} (should be one of {valid_verdicts})")
+                    return False
+                
+                print(f"✅ Found brand_scores with namescore: {namescore}/100 and verdict: {verdict}")
+                
+                # Test 3: No validation errors (especially for score_impact field)
+                response_str = json.dumps(data).lower()
+                validation_errors = []
+                
+                if "validation error" in response_str:
+                    validation_errors.append("Validation error found in response")
+                if "score_impact" in response_str and "error" in response_str:
+                    validation_errors.append("score_impact field validation error detected")
+                if "field required" in response_str:
+                    validation_errors.append("Required field validation error detected")
+                
+                if validation_errors:
+                    self.log_test("QuickTest Smoke - Validation Errors", False, "; ".join(validation_errors))
+                    return False
+                
+                print(f"✅ No validation errors detected")
+                
+                # Test 4: Check that legal_precedents contain USA cases (like Polaroid Corp.)
+                legal_precedents_found = False
+                usa_cases_found = False
+                polaroid_found = False
+                legal_precedents = []
+                
+                # Check in trademark_research section
+                if "trademark_research" in brand and brand["trademark_research"]:
+                    tm_research = brand["trademark_research"]
+                    if "legal_precedents" in tm_research and tm_research["legal_precedents"]:
+                        legal_precedents = tm_research["legal_precedents"]
+                        legal_precedents_found = True
+                        
+                        print(f"✅ Found legal_precedents array with {len(legal_precedents)} cases")
+                        
+                        # Check for USA cases
+                        for precedent in legal_precedents:
+                            if isinstance(precedent, dict):
+                                case_name = precedent.get("case_name", "").lower()
+                                jurisdiction = precedent.get("jurisdiction", "").lower()
+                                court = precedent.get("court", "").lower()
+                                
+                                # Check for USA jurisdiction
+                                if any(usa_indicator in jurisdiction for usa_indicator in ["usa", "united states", "us", "federal"]) or \
+                                   any(usa_indicator in court for usa_indicator in ["usa", "united states", "us", "federal", "uspto"]):
+                                    usa_cases_found = True
+                                    print(f"✅ Found USA case: {precedent.get('case_name', 'Unknown')}")
+                                
+                                # Check specifically for Polaroid Corp.
+                                if "polaroid" in case_name:
+                                    polaroid_found = True
+                                    print(f"✅ Found Polaroid Corp. case: {precedent.get('case_name', 'Unknown')}")
+                
+                if not legal_precedents_found:
+                    self.log_test("QuickTest Smoke - Legal Precedents", False, "legal_precedents array not found in trademark_research")
+                    return False
+                
+                if not usa_cases_found:
+                    print(f"⚠️  Warning: No USA cases found in legal_precedents (expected for USA market)")
+                    # Don't fail the test for this, just warn
+                
+                if polaroid_found:
+                    print(f"✅ Polaroid Corp. case found as expected")
+                else:
+                    print(f"ℹ️  Note: Polaroid Corp. case not found (may vary by brand)")
+                
+                # Summary
+                print(f"\n📊 QUICKTEST SMOKE TEST RESULTS:")
+                print(f"   ✅ API Status: 200 OK")
+                print(f"   ✅ NameScore: {namescore}/100")
+                print(f"   ✅ Verdict: {verdict}")
+                print(f"   ✅ No validation errors")
+                print(f"   ✅ Legal precedents: {len(legal_precedents)} cases")
+                print(f"   {'✅' if usa_cases_found else '⚠️ '} USA cases: {'Found' if usa_cases_found else 'Not found'}")
+                
+                self.log_test("QuickTest Smoke Test", True, 
+                            f"All core checks passed. NameScore: {namescore}/100, Verdict: {verdict}, Legal precedents: {len(legal_precedents)}")
+                return True
+                
+            except json.JSONDecodeError as e:
+                self.log_test("QuickTest Smoke - JSON Parse", False, f"Invalid JSON response: {str(e)}")
+                return False
+                
+        except requests.exceptions.Timeout:
+            self.log_test("QuickTest Smoke - Timeout", False, "Request timed out after 120 seconds")
+            return False
+        except Exception as e:
+            self.log_test("QuickTest Smoke - Exception", False, str(e))
+            return False
+
     def run_currency_tests_only(self):
         """Run only the currency logic tests as requested"""
         print("💰 Starting ACTUAL Country-Specific Trademark Cost Tests...")
