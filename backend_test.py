@@ -1152,6 +1152,103 @@ class BrandEvaluationTester:
             self.log_test("ACTUAL USPTO Costs - Exception", False, str(e))
             return False
 
+    def test_fallback_model_feature(self):
+        """Test the new fallback model feature with FallbackTest brand"""
+        payload = {
+            "brand_names": ["FallbackTest"],
+            "category": "Technology",
+            "positioning": "Premium",
+            "market_scope": "Single Country",
+            "countries": ["USA"]
+        }
+        
+        try:
+            print(f"\n🔄 Testing Fallback Model Feature...")
+            print(f"Payload: {json.dumps(payload, indent=2)}")
+            print(f"Expected: API should try gpt-4o first, then fallback to gpt-4o-mini if needed")
+            
+            response = requests.post(
+                f"{self.api_url}/evaluate", 
+                json=payload, 
+                headers={'Content-Type': 'application/json'},
+                timeout=180  # Extended timeout for LLM processing with retries
+            )
+            
+            print(f"Response Status: {response.status_code}")
+            
+            # Test 1: API should return 200 OK (not 502 or 500 error)
+            if response.status_code not in [200]:
+                error_msg = f"HTTP {response.status_code}: {response.text[:300]}"
+                if response.status_code in [502, 500]:
+                    self.log_test("Fallback Model Feature - Server Error", False, f"Server error (expected 200 OK): {error_msg}")
+                else:
+                    self.log_test("Fallback Model Feature - HTTP Error", False, error_msg)
+                return False
+            
+            try:
+                data = response.json()
+                print(f"✅ Response received successfully, checking structure...")
+                
+                # Test 2: Response should contain valid brand evaluation data
+                if not data.get("brand_scores") or len(data["brand_scores"]) == 0:
+                    self.log_test("Fallback Model Feature - Brand Scores Missing", False, "No brand scores returned")
+                    return False
+                
+                brand = data["brand_scores"][0]
+                
+                # Test 3: Check for FallbackTest brand name
+                if brand.get("brand_name") != "FallbackTest":
+                    self.log_test("Fallback Model Feature - Brand Name", False, f"Expected 'FallbackTest', got '{brand.get('brand_name')}'")
+                    return False
+                
+                # Test 4: Check for required evaluation fields
+                required_fields = ["namescore", "verdict", "summary"]
+                missing_fields = [field for field in required_fields if field not in brand]
+                
+                if missing_fields:
+                    self.log_test("Fallback Model Feature - Required Fields", False, f"Missing required fields: {missing_fields}")
+                    return False
+                
+                # Test 5: Check namescore is valid
+                namescore = brand.get("namescore")
+                if not isinstance(namescore, (int, float)) or not (0 <= namescore <= 100):
+                    self.log_test("Fallback Model Feature - NameScore Range", False, f"Invalid namescore: {namescore} (should be 0-100)")
+                    return False
+                
+                # Test 6: Check verdict is valid
+                verdict = brand.get("verdict", "")
+                valid_verdicts = ["APPROVE", "CAUTION", "REJECT"]
+                if verdict not in valid_verdicts:
+                    self.log_test("Fallback Model Feature - Verdict Value", False, f"Invalid verdict: {verdict} (should be one of {valid_verdicts})")
+                    return False
+                
+                # Test 7: Check executive summary exists
+                exec_summary = data.get("executive_summary", "")
+                if len(exec_summary) < 20:
+                    self.log_test("Fallback Model Feature - Executive Summary", False, f"Executive summary too short: {len(exec_summary)} chars")
+                    return False
+                
+                print(f"✅ FallbackTest evaluation completed successfully:")
+                print(f"   - NameScore: {namescore}")
+                print(f"   - Verdict: {verdict}")
+                print(f"   - Executive Summary: {len(exec_summary)} characters")
+                print(f"   - API returned 200 OK (not 502/500)")
+                
+                self.log_test("Fallback Model Feature", True, 
+                            f"API returned 200 OK with valid data. NameScore: {namescore}, Verdict: {verdict}")
+                return True
+                
+            except json.JSONDecodeError as e:
+                self.log_test("Fallback Model Feature - JSON Parse", False, f"Invalid JSON response: {str(e)}")
+                return False
+                
+        except requests.exceptions.Timeout:
+            self.log_test("Fallback Model Feature - Timeout", False, "Request timed out after 180 seconds")
+            return False
+        except Exception as e:
+            self.log_test("Fallback Model Feature - Exception", False, str(e))
+            return False
+
     def test_score_impact_validation_fix(self):
         """Test the score_impact validation fix with TestFix brand"""
         payload = {
