@@ -6,10 +6,18 @@ Performs comprehensive visibility checks including:
 - Combined brand + category searches
 - Multiple query strategies
 - Graceful error handling
+- BOTH Play Store AND iOS App Store searches
 """
 
 from duckduckgo_search import DDGS
 from google_play_scraper import search as google_search
+# iOS App Store search
+try:
+    from app_store_scraper import AppStore
+    IOS_AVAILABLE = True
+except ImportError:
+    IOS_AVAILABLE = False
+    
 import time
 import logging
 import re
