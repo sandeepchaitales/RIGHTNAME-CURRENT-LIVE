@@ -750,15 +750,36 @@ async def dynamic_brand_search(brand_name: str, category: str = "") -> dict:
     brand_singular = brand_normalized.rstrip('s') if len(brand_normalized) > 3 else brand_normalized
     
     def extract_bing_titles(html_content):
-        """Extract titles from Bing search results"""
-        titles = []
-        # Extract from h2 tags (main results)
-        h2_matches = re.findall(r'<h2[^>]*><a[^>]*>([^<]+)</a></h2>', html_content)
-        titles.extend(h2_matches)
-        # Also extract from search result snippets
-        snippet_matches = re.findall(r'<p class="b_algoSlug">([^<]+)</p>', html_content)
-        titles.extend(snippet_matches)
-        return titles[:15]
+        """Extract titles and domains from Bing search results"""
+        results = []
+        
+        # Pattern 1: Extract from cite tags (domains)
+        cite_matches = re.findall(r'<cite[^>]*>([^<]+)</cite>', html_content)
+        results.extend(cite_matches)
+        
+        # Pattern 2: Extract from main result links with title
+        title_matches = re.findall(r'<a[^>]*href="https?://[^"]*"[^>]*>([^<]{5,100})</a>', html_content)
+        results.extend([t for t in title_matches if len(t) > 5 and not t.startswith('http')])
+        
+        # Pattern 3: Extract from any span with reasonable text
+        span_matches = re.findall(r'<span[^>]*>([A-Z][a-zA-Z0-9\s\-\.]{10,80})</span>', html_content)
+        results.extend(span_matches)
+        
+        # Pattern 4: Look for brand-specific patterns
+        brand_patterns = re.findall(r'>([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)?)\s*[-–|:]\s*', html_content)
+        results.extend(brand_patterns)
+        
+        # Dedupe and clean
+        cleaned = []
+        seen = set()
+        for r in results:
+            r_clean = re.sub(r'&#\d+;', '', r).strip()
+            r_lower = r_clean.lower()
+            if r_clean and len(r_clean) > 3 and r_lower not in seen:
+                seen.add(r_lower)
+                cleaned.append(r_clean)
+        
+        return cleaned[:20]
     
     try:
         from primp import Client
