@@ -704,6 +704,11 @@ FAMOUS_BRANDS = {
     "disney", "warner bros", "universal", "paramount", "sony pictures", "mgm",
     "hbo", "showtime", "hulu", "paramount plus", "peacock", "espn", "cnn", "fox",
     "hotstar", "jio cinema", "zee5", "sony liv", "voot", "alt balaji", "mx player",
+    # Dating & Social Apps
+    "tinder", "bumble", "hinge", "okcupid", "match", "eharmony", "badoo", "happn",
+    "coffee meets bagel", "plenty of fish", "pof", "grindr", "her", "taimi",
+    "shaadi", "bharatmatrimony", "jeevansathi", "matrimony", "tantan", "momo",
+    "aisle", "dil mil", "truly madly", "trulymadly", "woo",
     # E-commerce & Delivery
     "fedex", "ups", "usps", "dhl", "amazon prime", "ebay", "etsy", "shopify",
     "alibaba", "aliexpress", "wish", "wayfair", "overstock", "chewy", "petco", "petsmart",
