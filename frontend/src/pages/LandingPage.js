@@ -109,7 +109,11 @@ const LandingPage = () => {
     brand_vibe: '',
     positioning: 'Premium',
     market_scope: 'Multi-Country',
-    countries: ''
+    countries: '',
+    // NEW: Enhanced input fields for better accuracy (Improvements #2 & #3)
+    known_competitors: '',
+    product_keywords: '',
+    problem_statement: ''
   });
 
   // Industry options
