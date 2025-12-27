@@ -959,15 +959,16 @@ async def evaluate_brands(request: BrandEvaluationRequest):
             }
     
     async def gather_visibility_data(brand):
-        """Run visibility checks with improved error handling"""
+        """Run visibility checks with improved error handling - wrapped for async"""
         try:
-            # Pass competitors and keywords for enhanced search
-            vis = check_visibility(
+            # Run synchronous check_visibility in a thread pool to avoid blocking
+            vis = await asyncio.to_thread(
+                check_visibility,
                 brand, 
-                category=request.category, 
-                industry=request.industry or "",
-                known_competitors=request.known_competitors or [],
-                product_keywords=request.product_keywords or []
+                request.category, 
+                request.industry or "",
+                request.known_competitors or [],
+                request.product_keywords or []
             )
             return vis
         except Exception as e:
