@@ -20,23 +20,23 @@
   ],
   "summary": {
     "tests_run": 2,
-    "tests_passed": 1,
-    "success_rate": 50.0,
-    "overall_success": false
+    "tests_passed": 2,
+    "success_rate": 100.0,
+    "overall_success": true
   },
   "results": [
     {
       "test": "API Health Check",
       "success": true,
       "details": "Status: 200, Response: {\"message\":\"RightName API is running\"}",
-      "timestamp": "2025-12-26T18:12:38.271955"
+      "timestamp": "2025-12-27T12:22:37.347480"
     },
     {
-      "test": "QuickTest Smoke - Timeout",
-      "success": false,
-      "details": "Request timed out after 120 seconds",
-      "timestamp": "2025-12-26T18:14:38.398139"
+      "test": "QuickTest Smoke Test",
+      "success": true,
+      "details": "All core checks passed. NameScore: 30.0/100, Verdict: REJECT, Legal precedents: 1",
+      "timestamp": "2025-12-27T12:23:07.012141"
     }
   ],
-  "timestamp": "2025-12-26T18:14:38.398278"
+  "timestamp": "2025-12-27T12:23:07.012303"
 }
