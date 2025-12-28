@@ -98,6 +98,72 @@ const FeatureCard = ({ icon: Icon, title, description, color, emoji }) => (
   </div>
 );
 
+// FAQ Accordion Item
+const FAQItem = ({ question, answer, isOpen, onClick }) => (
+  <div className="border-2 border-slate-200 rounded-2xl overflow-hidden hover:border-violet-300 transition-colors">
+    <button
+      onClick={onClick}
+      className="w-full flex items-center justify-between p-6 text-left bg-white hover:bg-slate-50 transition-colors"
+    >
+      <span className="font-bold text-slate-900 pr-4">{question}</span>
+      {isOpen ? (
+        <ChevronUp className="w-5 h-5 text-violet-600 flex-shrink-0" />
+      ) : (
+        <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
+      )}
+    </button>
+    {isOpen && (
+      <div className="px-6 pb-6 bg-slate-50">
+        <p className="text-slate-600 leading-relaxed">{answer}</p>
+      </div>
+    )}
+  </div>
+);
+
+// How It Works Step
+const HowItWorksStep = ({ number, title, description, icon: Icon, color }) => (
+  <div className="relative flex flex-col items-center text-center p-6">
+    <div className={`w-16 h-16 ${color} rounded-2xl flex items-center justify-center mb-4 shadow-lg`}>
+      <Icon className="w-8 h-8 text-white" />
+    </div>
+    <div className="absolute -top-2 -left-2 w-8 h-8 bg-slate-900 text-white rounded-full flex items-center justify-center font-black text-sm">
+      {number}
+    </div>
+    <h3 className="font-black text-lg text-slate-900 mb-2">{title}</h3>
+    <p className="text-slate-500 text-sm">{description}</p>
+  </div>
+);
+
+// Testimonial Card
+const TestimonialCard = ({ quote, author, role, company, avatar }) => (
+  <Card className="border-2 border-slate-200 hover:border-violet-300 transition-all duration-300 hover:shadow-xl">
+    <CardContent className="p-6">
+      <Quote className="w-8 h-8 text-violet-300 mb-4" />
+      <p className="text-slate-700 mb-6 leading-relaxed italic">"{quote}"</p>
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center text-white font-bold text-lg">
+          {avatar}
+        </div>
+        <div>
+          <p className="font-bold text-slate-900">{author}</p>
+          <p className="text-sm text-slate-500">{role}, {company}</p>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+);
+
+// Use Case Card
+const UseCaseCard = ({ icon: Icon, title, description, color }) => (
+  <div className="p-6 rounded-2xl bg-white border-2 border-slate-200 hover:border-violet-300 transition-all duration-300 hover:shadow-lg">
+    <div className={`w-12 h-12 ${color} rounded-xl flex items-center justify-center mb-4`}>
+      <Icon className="w-6 h-6 text-white" />
+    </div>
+    <h3 className="font-bold text-slate-900 mb-2">{title}</h3>
+    <p className="text-slate-500 text-sm">{description}</p>
+  </div>
+);
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading, loginWithGoogle, logout, openAuthModal } = useAuth();
