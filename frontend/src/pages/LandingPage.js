@@ -880,10 +880,6 @@ const LandingPage = () => {
                 a: "RIGHTNAME is an AI-powered brand name evaluation tool that provides consulting-grade analysis of brand names. It checks trademark conflicts, domain availability, social media handles, and generates a comprehensive NameScore report in under 60 seconds."
               },
               {
-                q: "How much does RIGHTNAME cost?",
-                a: "Your first report is completely FREE with no credit card required. After that, single reports cost $29 each, or you can get a bundle of 3 reports for $49 (saving $38)."
-              },
-              {
                 q: "What does a RIGHTNAME report include?",
                 a: "Each report includes: NameScore Index (0-100), Trademark Risk Matrix, Domain Availability Check, Social Handle Availability, Competitive Landscape Analysis, Cultural & Linguistic Analysis, Registration Timeline & Costs, Mitigation Strategies, and Alternative Name Suggestions."
               },
@@ -902,6 +898,30 @@ const LandingPage = () => {
               {
                 q: "Which countries do you support?",
                 a: "We support trademark analysis for 15+ countries including USA, India, UK, Canada, Australia, Germany, France, Japan, China, Brazil, UAE, Singapore, and more. Each report includes country-specific registration costs and timelines."
+              },
+              {
+                q: "What is a NameScore and how is it calculated?",
+                a: "NameScore is a proprietary index (0-100) that evaluates brand names across 8 dimensions: Brand Distinctiveness, Cultural Resonance, Premiumisation Potential, Scalability, Trademark Safety, Consumer Perception, Digital Readiness, and Future-Proofing. Higher scores indicate stronger brand name candidates."
+              },
+              {
+                q: "How does RIGHTNAME detect trademark conflicts?",
+                a: "Our AI uses multiple methods: exact match searches in trademark databases, phonetic similarity algorithms (Soundex, Metaphone), Jaro-Winkler string matching, and semantic analysis. We check for conflicts across registered trademarks, company names, domain registrations, and app store listings."
+              },
+              {
+                q: "What is the difference between GO, CAUTION, and REJECT verdicts?",
+                a: "GO means the name has low trademark risk and good availability. CAUTION indicates moderate risk - the name may work but needs careful consideration. REJECT means significant trademark conflicts exist and we recommend choosing a different name to avoid legal issues."
+              },
+              {
+                q: "Can RIGHTNAME help with international brand naming?",
+                a: "Yes! We analyze cultural and linguistic implications across multiple languages and regions. Our reports flag potential issues like negative meanings, pronunciation difficulties, or cultural sensitivities in your target markets."
+              },
+              {
+                q: "What makes RIGHTNAME different from free trademark search tools?",
+                a: "Free tools only check exact matches. RIGHTNAME provides comprehensive analysis including phonetic similarities, visual similarities, semantic conflicts, domain availability, social handle checks, competitive landscape mapping, and AI-powered risk assessment - similar to what a $50,000 brand consultancy delivers."
+              },
+              {
+                q: "Do I need to hire a trademark attorney after using RIGHTNAME?",
+                a: "While RIGHTNAME provides thorough preliminary screening, we recommend consulting a trademark attorney before filing for trademark registration. Our reports help you identify strong candidates and potential issues, making your attorney consultation more efficient and cost-effective."
               }
             ].map((faq, index) => (
               <FAQItem
