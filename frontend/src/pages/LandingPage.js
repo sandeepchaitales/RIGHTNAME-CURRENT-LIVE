@@ -694,7 +694,7 @@ const LandingPage = () => {
         <ReportCarousel />
 
         {/* Feature Grid Section */}
-        <div className="mt-28">
+        <div id="features" className="mt-28">
             <div className="text-center mb-16">
                 <Badge className="mb-4 bg-violet-100 text-violet-700 border-violet-200 px-4 py-1.5 text-sm font-black">
                   💡 What We Analyze
