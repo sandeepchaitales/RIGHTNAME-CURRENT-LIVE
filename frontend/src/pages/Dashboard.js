@@ -1665,6 +1665,8 @@ const Dashboard = () => {
     const [reportData, setReportData] = useState(null);
     const [queryData, setQueryData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [downloading, setDownloading] = useState(false);
+    const reportRef = useRef(null);
     
     const isAuthenticated = !!user;
     const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1689,6 +1691,44 @@ const Dashboard = () => {
     const handleRegister = () => {
         localStorage.setItem('auth_return_url', '/dashboard');
         openAuthModal(reportData?.report_id);
+    };
+
+    // PDF Download function
+    const handleDownloadPDF = async () => {
+        if (!reportRef.current) return;
+        
+        setDownloading(true);
+        
+        try {
+            const element = reportRef.current;
+            const brandName = reportData?.brand_scores?.[0]?.brand_name || 'Report';
+            
+            const opt = {
+                margin: [10, 10, 10, 10],
+                filename: `RIGHTNAME_${brandName}_Report.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+            
+            await html2pdf().set(opt).from(element).save();
+        } catch (error) {
+            console.error('PDF generation failed:', error);
+            // Fallback to print
+            window.print();
+        } finally {
+            setDownloading(false);
+        }
     };
 
     if (loading) {
