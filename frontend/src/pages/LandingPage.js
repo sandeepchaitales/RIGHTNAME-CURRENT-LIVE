@@ -861,52 +861,6 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Pricing Preview */}
-        <div className="mt-28 bg-gradient-to-br from-slate-50 to-violet-50/30 rounded-3xl p-12 border-2 border-slate-200">
-          <div className="text-center mb-12">
-            <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 px-4 py-1.5 text-sm font-black">
-              💰 Simple Pricing
-            </Badge>
-            <h2 className="text-4xl font-black text-slate-900 mb-4">
-              Start{' '}
-              <span className="text-emerald-600">Free</span>, Scale as You Grow
-            </h2>
-            <p className="text-slate-500 font-medium max-w-2xl mx-auto text-lg">
-              No subscriptions. No hidden fees. Pay only when you need more reports.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl p-6 border-2 border-emerald-200 text-center">
-              <div className="text-4xl mb-2">🎁</div>
-              <h3 className="font-black text-xl text-slate-900 mb-1">Free Trial</h3>
-              <p className="text-3xl font-black text-emerald-600 mb-2">$0</p>
-              <p className="text-slate-500 text-sm">First report free</p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border-2 border-blue-200 text-center">
-              <div className="text-4xl mb-2">📄</div>
-              <h3 className="font-black text-xl text-slate-900 mb-1">Single Report</h3>
-              <p className="text-3xl font-black text-blue-600 mb-2">$29</p>
-              <p className="text-slate-500 text-sm">Per evaluation</p>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border-2 border-violet-300 text-center relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-violet-600 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">BEST VALUE</div>
-              <div className="text-4xl mb-2">👑</div>
-              <h3 className="font-black text-xl text-slate-900 mb-1">3-Report Bundle</h3>
-              <p className="text-3xl font-black text-violet-600 mb-2">$49</p>
-              <p className="text-slate-500 text-sm">Save $38</p>
-            </div>
-          </div>
-
-          <div className="text-center mt-8">
-            <Link to="/pricing">
-              <Button className="bg-violet-600 hover:bg-violet-700 text-white font-bold px-8 py-6 rounded-xl text-lg">
-                View Full Pricing <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-
         {/* FAQ Section */}
         <div id="faq" className="mt-28">
           <div className="text-center mb-16">
