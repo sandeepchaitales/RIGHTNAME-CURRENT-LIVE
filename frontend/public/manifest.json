@@ -1,0 +1,28 @@
+{
+    "short_name": "RIGHTNAME",
+    "name": "RIGHTNAME - AI Brand Name Evaluation",
+    "description": "AI-powered brand name evaluation tool. Check trademark conflicts, domain availability, and get a consulting-grade NameScore report.",
+    "icons": [
+        {
+            "src": "https://customer-assets.emergentagent.com/job_name-radar-1/artifacts/a4ppykdi_RIGHTNAME.AI.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://customer-assets.emergentagent.com/job_name-radar-1/artifacts/a4ppykdi_RIGHTNAME.AI.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#2563EB",
+    "background_color": "#ffffff",
+    "orientation": "portrait-primary",
+    "categories": ["business", "productivity"],
+    "lang": "en-US",
+    "dir": "ltr",
+    "scope": "/"
+}
