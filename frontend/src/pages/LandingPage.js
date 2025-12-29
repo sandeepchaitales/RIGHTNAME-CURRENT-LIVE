@@ -367,7 +367,7 @@ const LandingPage = () => {
         <div className="flex justify-between items-center mb-12 lg:mb-16">
             <div className="flex items-center gap-3">
                 <img 
-                  src="https://customer-assets.emergentagent.com/job_name-radar-1/artifacts/a4ppykdi_RIGHTNAME.AI.png" 
+                  src="https://customer-assets.emergentagent.com/job_name-radar-1/artifacts/qrfrrizq_R.png" 
                   alt="RIGHTNAME Logo" 
                   className="w-12 h-12 rounded-2xl shadow-xl shadow-violet-300/50 hover:scale-110 transition-transform cursor-pointer"
                 />
