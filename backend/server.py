@@ -1202,11 +1202,11 @@ async def evaluate_brands(request: BrandEvaluationRequest):
     # ==================== END EARLY STOPPING ====================
     
     if LlmChat and EMERGENT_KEY:
-        # Try Claude first since OpenAI is having 502 issues
+        # gpt-4o-mini is most reliable, use as primary
         models_to_try = [
-            ("anthropic", "claude-sonnet-4-20250514"),  # Primary - Claude Sonnet (most reliable)
+            ("openai", "gpt-4o-mini"),                  # Primary - Most reliable
             ("openai", "gpt-4o"),                       # Fallback 1 - GPT-4o
-            ("openai", "gpt-4.1"),                      # Fallback 2 - GPT-4.1
+            ("anthropic", "claude-sonnet-4-20250514"),  # Fallback 2 - Claude
         ]
     else:
         raise HTTPException(status_code=500, detail="LLM Integration not initialized (Check EMERGENT_LLM_KEY)")
