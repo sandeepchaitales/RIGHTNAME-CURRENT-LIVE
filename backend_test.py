@@ -2717,7 +2717,7 @@ class BrandEvaluationTester:
             "category": "Technology",
             "industry": "Software",
             "product_type": "SaaS Platform",
-            "positioning": "Premium AI-powered solutions",
+            "positioning": "Premium",
             "market_scope": "Global",
             "countries": ["USA", "UK", "India"]
         }
@@ -2821,7 +2821,7 @@ class BrandEvaluationTester:
             "category": "Fashion",
             "industry": "Apparel",
             "product_type": "Sportswear",
-            "positioning": "Premium athletic wear",
+            "positioning": "Premium",
             "market_scope": "Global",
             "countries": ["USA"]
         }
@@ -2925,7 +2925,7 @@ class BrandEvaluationTester:
             "category": "Food & Beverage",
             "industry": "Restaurant",
             "product_type": "Cafe Chain",
-            "positioning": "Premium chai experience",
+            "positioning": "Premium",
             "market_scope": "Single Country",
             "countries": ["India"]
         }
@@ -3024,7 +3024,7 @@ class BrandEvaluationTester:
             "category": "Technology",
             "industry": "Software",
             "product_type": "Mobile App",
-            "positioning": "Innovative productivity tool",
+            "positioning": "Premium",
             "market_scope": "Multi-Country",
             "countries": ["USA", "UK"]
         }
