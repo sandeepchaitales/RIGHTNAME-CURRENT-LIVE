@@ -3320,7 +3320,7 @@ class BrandEvaluationTester:
             "category": "Technology",
             "industry": "Software",
             "product_type": "AI Platform",
-            "positioning": "Cutting-edge AI solutions",
+            "positioning": "Premium",
             "market_scope": "Global",
             "countries": ["USA", "India"]
         }
