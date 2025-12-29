@@ -34,6 +34,26 @@ class BrandEvaluationTester:
             "timestamp": datetime.now().isoformat()
         })
 
+    def print_summary(self):
+        """Print test summary"""
+        print("\n" + "="*80)
+        print("📊 TEST SUMMARY")
+        print("="*80)
+        print(f"Total Tests: {self.tests_run}")
+        print(f"Passed: {self.tests_passed}")
+        print(f"Failed: {self.tests_run - self.tests_passed}")
+        print(f"Success Rate: {(self.tests_passed/self.tests_run*100):.1f}%" if self.tests_run > 0 else "0%")
+        
+        if self.tests_passed == self.tests_run:
+            print("🎉 ALL TESTS PASSED!")
+        else:
+            print(f"\n❌ FAILED TESTS:")
+            for result in self.test_results:
+                if not result["success"]:
+                    print(f"  - {result['test']}: {result['details']}")
+        
+        return self.tests_passed == self.tests_run
+
     def test_api_health(self):
         """Test basic API health"""
         try:
