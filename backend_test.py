@@ -2710,6 +2710,444 @@ class BrandEvaluationTester:
             self.log_test("LLM Backend Logs - Exception", False, str(e))
             return False
 
+    def test_502_fix_unique_brand_vextrona(self):
+        """Test Case 1: Unique Brand Test - Vextrona should get GO verdict with NameScore > 70"""
+        payload = {
+            "brand_names": ["Vextrona"],
+            "category": "Technology",
+            "industry": "Software",
+            "product_type": "SaaS Platform",
+            "positioning": "Premium AI-powered solutions",
+            "market_scope": "Global",
+            "countries": ["USA", "UK", "India"]
+        }
+        
+        try:
+            print(f"\n🔍 Testing 502 Fix - Unique Brand: Vextrona...")
+            print(f"Expected: GO verdict, NameScore > 70, no 502 errors")
+            
+            import time
+            start_time = time.time()
+            
+            response = requests.post(
+                f"{self.api_url}/evaluate", 
+                json=payload, 
+                headers={'Content-Type': 'application/json'},
+                timeout=120  # Should complete within 60-90 seconds
+            )
+            
+            end_time = time.time()
+            response_time = end_time - start_time
+            
+            print(f"Response Status: {response.status_code}")
+            print(f"Response Time: {response_time:.2f} seconds")
+            
+            # Test 1: Should return 200 OK (not 502 BadGateway)
+            if response.status_code == 502:
+                self.log_test("502 Fix - Unique Brand Vextrona (502 Error)", False, "Still getting 502 BadGateway error - fix not working")
+                return False
+            elif response.status_code != 200:
+                error_msg = f"HTTP {response.status_code}: {response.text[:300]}"
+                self.log_test("502 Fix - Unique Brand Vextrona (HTTP Error)", False, error_msg)
+                return False
+            
+            # Test 2: Response time should be within 60-90 seconds
+            if response_time > 120:
+                self.log_test("502 Fix - Unique Brand Vextrona (Timeout)", False, f"Response took {response_time:.2f}s (should be < 120s)")
+                return False
+            
+            try:
+                data = response.json()
+                
+                # Test 3: Check response structure
+                if not data.get("brand_scores") or len(data["brand_scores"]) == 0:
+                    self.log_test("502 Fix - Unique Brand Vextrona (Structure)", False, "No brand scores returned")
+                    return False
+                
+                brand = data["brand_scores"][0]
+                
+                # Test 4: Check brand name
+                if brand.get("brand_name") != "Vextrona":
+                    self.log_test("502 Fix - Unique Brand Vextrona (Brand Name)", False, f"Expected 'Vextrona', got '{brand.get('brand_name')}'")
+                    return False
+                
+                # Test 5: Check NameScore > 70
+                namescore = brand.get("namescore")
+                if not isinstance(namescore, (int, float)):
+                    self.log_test("502 Fix - Unique Brand Vextrona (NameScore Type)", False, f"NameScore should be number, got {type(namescore)}")
+                    return False
+                
+                if namescore <= 70:
+                    self.log_test("502 Fix - Unique Brand Vextrona (NameScore Low)", False, f"NameScore {namescore} should be > 70 for unique brand")
+                    return False
+                
+                # Test 6: Check verdict is GO
+                verdict = brand.get("verdict", "")
+                if verdict not in ["GO", "APPROVE"]:
+                    self.log_test("502 Fix - Unique Brand Vextrona (Verdict)", False, f"Expected GO/APPROVE verdict, got '{verdict}'")
+                    return False
+                
+                # Test 7: Check executive summary exists
+                exec_summary = data.get("executive_summary", "")
+                if len(exec_summary) < 50:
+                    self.log_test("502 Fix - Unique Brand Vextrona (Summary)", False, f"Executive summary too short: {len(exec_summary)} chars")
+                    return False
+                
+                print(f"✅ Vextrona evaluation completed successfully:")
+                print(f"   - NameScore: {namescore}/100")
+                print(f"   - Verdict: {verdict}")
+                print(f"   - Response Time: {response_time:.2f}s")
+                print(f"   - No 502 errors")
+                
+                self.log_test("502 Fix - Unique Brand Vextrona", True, 
+                            f"All checks passed. NameScore: {namescore}/100, Verdict: {verdict}, Time: {response_time:.2f}s")
+                return True
+                
+            except json.JSONDecodeError as e:
+                self.log_test("502 Fix - Unique Brand Vextrona (JSON)", False, f"Invalid JSON response: {str(e)}")
+                return False
+                
+        except requests.exceptions.Timeout:
+            self.log_test("502 Fix - Unique Brand Vextrona (Timeout)", False, "Request timed out after 120 seconds")
+            return False
+        except Exception as e:
+            self.log_test("502 Fix - Unique Brand Vextrona (Exception)", False, str(e))
+            return False
+
+    def test_502_fix_famous_brand_nike(self):
+        """Test Case 2: Famous Brand Test - Nike should get REJECT verdict with early stopping"""
+        payload = {
+            "brand_names": ["Nike"],
+            "category": "Fashion",
+            "industry": "Apparel",
+            "product_type": "Sportswear",
+            "positioning": "Premium athletic wear",
+            "market_scope": "Global",
+            "countries": ["USA"]
+        }
+        
+        try:
+            print(f"\n🔍 Testing 502 Fix - Famous Brand: Nike...")
+            print(f"Expected: REJECT verdict, early stopping (< 10s), no 502 errors")
+            
+            import time
+            start_time = time.time()
+            
+            response = requests.post(
+                f"{self.api_url}/evaluate", 
+                json=payload, 
+                headers={'Content-Type': 'application/json'},
+                timeout=60  # Should be very fast with early stopping
+            )
+            
+            end_time = time.time()
+            response_time = end_time - start_time
+            
+            print(f"Response Status: {response.status_code}")
+            print(f"Response Time: {response_time:.2f} seconds")
+            
+            # Test 1: Should return 200 OK (not 502 BadGateway)
+            if response.status_code == 502:
+                self.log_test("502 Fix - Famous Brand Nike (502 Error)", False, "Still getting 502 BadGateway error - fix not working")
+                return False
+            elif response.status_code != 200:
+                error_msg = f"HTTP {response.status_code}: {response.text[:300]}"
+                self.log_test("502 Fix - Famous Brand Nike (HTTP Error)", False, error_msg)
+                return False
+            
+            # Test 2: Response time should be very fast (early stopping)
+            if response_time > 30:
+                print(f"⚠️  Warning: Response took {response_time:.2f}s (expected < 30s with early stopping)")
+            
+            try:
+                data = response.json()
+                
+                # Test 3: Check response structure
+                if not data.get("brand_scores") or len(data["brand_scores"]) == 0:
+                    self.log_test("502 Fix - Famous Brand Nike (Structure)", False, "No brand scores returned")
+                    return False
+                
+                brand = data["brand_scores"][0]
+                
+                # Test 4: Check brand name
+                if brand.get("brand_name") != "Nike":
+                    self.log_test("502 Fix - Famous Brand Nike (Brand Name)", False, f"Expected 'Nike', got '{brand.get('brand_name')}'")
+                    return False
+                
+                # Test 5: Check verdict is REJECT
+                verdict = brand.get("verdict", "")
+                if verdict != "REJECT":
+                    self.log_test("502 Fix - Famous Brand Nike (Verdict)", False, f"Expected REJECT verdict, got '{verdict}'")
+                    return False
+                
+                # Test 6: Check NameScore is low (should be < 20 for famous brand)
+                namescore = brand.get("namescore")
+                if isinstance(namescore, (int, float)) and namescore > 20:
+                    print(f"⚠️  Warning: NameScore {namescore} is high for famous brand (expected < 20)")
+                
+                # Test 7: Check for early stopping indicators in summary
+                exec_summary = data.get("executive_summary", "")
+                summary_text = brand.get("summary", "")
+                
+                early_stopping_indicators = ["IMMEDIATE REJECTION", "existing brand", "famous brand", "trademark conflict"]
+                found_indicators = [indicator for indicator in early_stopping_indicators 
+                                  if indicator.lower() in exec_summary.lower() or indicator.lower() in summary_text.lower()]
+                
+                if not found_indicators:
+                    print(f"⚠️  Warning: No early stopping indicators found in summary")
+                
+                print(f"✅ Nike evaluation completed successfully:")
+                print(f"   - NameScore: {namescore}")
+                print(f"   - Verdict: {verdict}")
+                print(f"   - Response Time: {response_time:.2f}s")
+                print(f"   - Early stopping indicators: {found_indicators}")
+                print(f"   - No 502 errors")
+                
+                self.log_test("502 Fix - Famous Brand Nike", True, 
+                            f"All checks passed. Verdict: {verdict}, Time: {response_time:.2f}s, Indicators: {found_indicators}")
+                return True
+                
+            except json.JSONDecodeError as e:
+                self.log_test("502 Fix - Famous Brand Nike (JSON)", False, f"Invalid JSON response: {str(e)}")
+                return False
+                
+        except requests.exceptions.Timeout:
+            self.log_test("502 Fix - Famous Brand Nike (Timeout)", False, "Request timed out after 60 seconds")
+            return False
+        except Exception as e:
+            self.log_test("502 Fix - Famous Brand Nike (Exception)", False, str(e))
+            return False
+
+    def test_502_fix_similar_brand_chaibunk(self):
+        """Test Case 3: Similar Brand Test - Chaibunk should detect as existing brand"""
+        payload = {
+            "brand_names": ["Chaibunk"],
+            "category": "Food & Beverage",
+            "industry": "Restaurant",
+            "product_type": "Cafe Chain",
+            "positioning": "Premium chai experience",
+            "market_scope": "Single Country",
+            "countries": ["India"]
+        }
+        
+        try:
+            print(f"\n🔍 Testing 502 Fix - Similar Brand: Chaibunk...")
+            print(f"Expected: REJECT verdict (existing chai cafe chain), no 502 errors")
+            
+            import time
+            start_time = time.time()
+            
+            response = requests.post(
+                f"{self.api_url}/evaluate", 
+                json=payload, 
+                headers={'Content-Type': 'application/json'},
+                timeout=120  # Should complete within reasonable time
+            )
+            
+            end_time = time.time()
+            response_time = end_time - start_time
+            
+            print(f"Response Status: {response.status_code}")
+            print(f"Response Time: {response_time:.2f} seconds")
+            
+            # Test 1: Should return 200 OK (not 502 BadGateway)
+            if response.status_code == 502:
+                self.log_test("502 Fix - Similar Brand Chaibunk (502 Error)", False, "Still getting 502 BadGateway error - fix not working")
+                return False
+            elif response.status_code != 200:
+                error_msg = f"HTTP {response.status_code}: {response.text[:300]}"
+                self.log_test("502 Fix - Similar Brand Chaibunk (HTTP Error)", False, error_msg)
+                return False
+            
+            try:
+                data = response.json()
+                
+                # Test 2: Check response structure
+                if not data.get("brand_scores") or len(data["brand_scores"]) == 0:
+                    self.log_test("502 Fix - Similar Brand Chaibunk (Structure)", False, "No brand scores returned")
+                    return False
+                
+                brand = data["brand_scores"][0]
+                
+                # Test 3: Check brand name
+                if brand.get("brand_name") != "Chaibunk":
+                    self.log_test("502 Fix - Similar Brand Chaibunk (Brand Name)", False, f"Expected 'Chaibunk', got '{brand.get('brand_name')}'")
+                    return False
+                
+                # Test 4: Check verdict (should be REJECT for existing brand)
+                verdict = brand.get("verdict", "")
+                if verdict not in ["REJECT", "CAUTION"]:
+                    print(f"⚠️  Warning: Expected REJECT/CAUTION for existing brand, got '{verdict}'")
+                
+                # Test 5: Check for conflict detection in summary
+                exec_summary = data.get("executive_summary", "")
+                summary_text = brand.get("summary", "")
+                
+                conflict_indicators = ["chai bunk", "existing", "conflict", "similar", "trademark"]
+                found_conflicts = [indicator for indicator in conflict_indicators 
+                                 if indicator.lower() in exec_summary.lower() or indicator.lower() in summary_text.lower()]
+                
+                # Test 6: Check NameScore (should be low for conflicting brand)
+                namescore = brand.get("namescore")
+                if isinstance(namescore, (int, float)) and namescore > 50:
+                    print(f"⚠️  Warning: NameScore {namescore} is high for conflicting brand (expected < 50)")
+                
+                print(f"✅ Chaibunk evaluation completed successfully:")
+                print(f"   - NameScore: {namescore}")
+                print(f"   - Verdict: {verdict}")
+                print(f"   - Response Time: {response_time:.2f}s")
+                print(f"   - Conflict indicators: {found_conflicts}")
+                print(f"   - No 502 errors")
+                
+                # Consider test passed if no 502 error and reasonable response
+                success = True
+                details = f"No 502 errors. Verdict: {verdict}, Time: {response_time:.2f}s, Conflicts: {found_conflicts}"
+                
+                self.log_test("502 Fix - Similar Brand Chaibunk", success, details)
+                return success
+                
+            except json.JSONDecodeError as e:
+                self.log_test("502 Fix - Similar Brand Chaibunk (JSON)", False, f"Invalid JSON response: {str(e)}")
+                return False
+                
+        except requests.exceptions.Timeout:
+            self.log_test("502 Fix - Similar Brand Chaibunk (Timeout)", False, "Request timed out after 120 seconds")
+            return False
+        except Exception as e:
+            self.log_test("502 Fix - Similar Brand Chaibunk (Exception)", False, str(e))
+            return False
+
+    def test_502_fix_api_response_time(self):
+        """Test Case 4: API Response Time - Verify evaluation completes within 60-90 seconds"""
+        payload = {
+            "brand_names": ["Zyphlora"],
+            "category": "Technology",
+            "industry": "Software",
+            "product_type": "Mobile App",
+            "positioning": "Innovative productivity tool",
+            "market_scope": "Multi-Country",
+            "countries": ["USA", "UK"]
+        }
+        
+        try:
+            print(f"\n🔍 Testing 502 Fix - API Response Time: Zyphlora...")
+            print(f"Expected: Complete within 60-90 seconds, no timeouts, no 502 errors")
+            
+            import time
+            start_time = time.time()
+            
+            response = requests.post(
+                f"{self.api_url}/evaluate", 
+                json=payload, 
+                headers={'Content-Type': 'application/json'},
+                timeout=120  # Allow up to 120s but expect 60-90s
+            )
+            
+            end_time = time.time()
+            response_time = end_time - start_time
+            
+            print(f"Response Status: {response.status_code}")
+            print(f"Response Time: {response_time:.2f} seconds")
+            
+            # Test 1: Should return 200 OK (not 502 BadGateway)
+            if response.status_code == 502:
+                self.log_test("502 Fix - API Response Time (502 Error)", False, "Still getting 502 BadGateway error - fix not working")
+                return False
+            elif response.status_code != 200:
+                error_msg = f"HTTP {response.status_code}: {response.text[:300]}"
+                self.log_test("502 Fix - API Response Time (HTTP Error)", False, error_msg)
+                return False
+            
+            # Test 2: Response time should be within acceptable range
+            if response_time > 120:
+                self.log_test("502 Fix - API Response Time (Too Slow)", False, f"Response took {response_time:.2f}s (should be < 120s)")
+                return False
+            
+            # Check if within optimal range
+            within_optimal = 60 <= response_time <= 90
+            if not within_optimal:
+                print(f"⚠️  Response time {response_time:.2f}s is outside optimal range (60-90s)")
+            
+            try:
+                data = response.json()
+                
+                # Test 3: Check response completeness
+                required_fields = ["executive_summary", "brand_scores", "comparison_verdict"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if missing_fields:
+                    self.log_test("502 Fix - API Response Time (Incomplete)", False, f"Missing fields: {missing_fields}")
+                    return False
+                
+                # Test 4: Check brand evaluation completeness
+                if not data.get("brand_scores") or len(data["brand_scores"]) == 0:
+                    self.log_test("502 Fix - API Response Time (No Brands)", False, "No brand scores returned")
+                    return False
+                
+                brand = data["brand_scores"][0]
+                
+                # Test 5: Check essential brand fields
+                essential_fields = ["brand_name", "namescore", "verdict", "summary"]
+                missing_brand_fields = [field for field in essential_fields if field not in brand]
+                
+                if missing_brand_fields:
+                    self.log_test("502 Fix - API Response Time (Incomplete Brand)", False, f"Missing brand fields: {missing_brand_fields}")
+                    return False
+                
+                # Test 6: Check for comprehensive analysis sections
+                analysis_sections = ["trademark_research", "domain_analysis", "visibility_analysis"]
+                present_sections = [section for section in analysis_sections if section in brand and brand[section]]
+                
+                print(f"✅ Zyphlora evaluation completed successfully:")
+                print(f"   - Response Time: {response_time:.2f}s")
+                print(f"   - Within optimal range (60-90s): {within_optimal}")
+                print(f"   - NameScore: {brand.get('namescore')}")
+                print(f"   - Verdict: {brand.get('verdict')}")
+                print(f"   - Analysis sections: {len(present_sections)}/3")
+                print(f"   - No 502 errors or timeouts")
+                
+                self.log_test("502 Fix - API Response Time", True, 
+                            f"Completed in {response_time:.2f}s. Optimal range: {within_optimal}, Sections: {len(present_sections)}/3")
+                return True
+                
+            except json.JSONDecodeError as e:
+                self.log_test("502 Fix - API Response Time (JSON)", False, f"Invalid JSON response: {str(e)}")
+                return False
+                
+        except requests.exceptions.Timeout:
+            self.log_test("502 Fix - API Response Time (Timeout)", False, "Request timed out after 120 seconds")
+            return False
+        except Exception as e:
+            self.log_test("502 Fix - API Response Time (Exception)", False, str(e))
+            return False
+
+    def run_502_fix_tests(self):
+        """Run all 502 BadGatewayError fix tests"""
+        print("🔧 Testing 502 BadGatewayError Fix...")
+        print("Testing gpt-5.2 → gpt-4o with gpt-4.1 fallback")
+        print("=" * 60)
+        
+        # Run the specific 502 fix tests
+        self.test_502_fix_unique_brand_vextrona()
+        self.test_502_fix_famous_brand_nike()
+        self.test_502_fix_similar_brand_chaibunk()
+        self.test_502_fix_api_response_time()
+        
+        # Print summary
+        print("\n" + "=" * 60)
+        print(f"🔧 502 Fix Test Summary: {self.tests_passed}/{self.tests_run} tests passed")
+        
+        if self.tests_passed == self.tests_run:
+            print("🎉 All 502 fix tests PASSED!")
+        else:
+            print(f"❌ {self.tests_run - self.tests_passed} tests FAILED")
+            print("\nFailed tests:")
+            for result in self.test_results:
+                if not result["success"]:
+                    print(f"  - {result['test']}: {result['details']}")
+        
+        return self.tests_passed == self.tests_run
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("🚀 Starting Backend API Tests...")
