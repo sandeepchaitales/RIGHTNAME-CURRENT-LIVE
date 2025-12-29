@@ -757,22 +757,35 @@ async def dynamic_brand_search(brand_name: str, category: str = "") -> dict:
                     brand_lower = brand_name.lower().replace(" ", "")
                     brand_with_space = brand_name.lower()
                     
-                    # Count how many times the brand appears in search results
-                    brand_mentions = html_lower.count(brand_lower)
+                    # Count how many times the EXACT brand appears in search results
+                    # Use word boundary matching to avoid partial matches
+                    import re
+                    brand_pattern = re.escape(brand_with_space)
+                    brand_mentions = len(re.findall(rf'\b{brand_pattern}\b', html_lower))
+                    
+                    # Also check without spaces for combined brand names
+                    brand_no_space_pattern = re.escape(brand_lower)
+                    brand_mentions += len(re.findall(rf'\b{brand_no_space_pattern}\b', html_lower))
                     
                     # Strong indicators the brand is an established business
+                    # These must appear NEAR the brand name (within 200 chars)
                     business_indicators = [
-                        "official", "franchise", "stores", "outlets", "locations",
+                        "official site", "official website", "franchise", "stores", "outlets", "locations",
                         "menu", "cafe", "restaurant", "chain", "reviews", "rating",
-                        "zomato", "swiggy", "google maps", "contact", "careers",
+                        "zomato", "swiggy", "google maps", "contact us", "careers",
                         "about us", "our story", "founded", "established"
                     ]
                     
                     found_indicators = []
-                    for indicator in business_indicators:
-                        # Check if indicator appears near the brand name
-                        if indicator in html_lower:
-                            found_indicators.append(indicator)
+                    # Look for indicators within 200 chars of brand mention
+                    for match in re.finditer(rf'\b{brand_pattern}\b|\b{brand_no_space_pattern}\b', html_lower):
+                        context_start = max(0, match.start() - 200)
+                        context_end = min(len(html_lower), match.end() + 200)
+                        context = html_lower[context_start:context_end]
+                        
+                        for indicator in business_indicators:
+                            if indicator in context and indicator not in found_indicators:
+                                found_indicators.append(indicator)
                     
                     # Also check for domain patterns
                     domain_patterns = [f"{brand_lower}.com", f"{brand_lower}.in", f"{brand_lower}.co"]
@@ -782,16 +795,17 @@ async def dynamic_brand_search(brand_name: str, category: str = "") -> dict:
                     
                     print(f"🔎 WEB SEARCH: '{brand_name}' mentions={brand_mentions}, indicators={found_indicators[:5]}", flush=True)
                     
-                    # If brand appears multiple times AND has business indicators
-                    if brand_mentions >= 3 and len(found_indicators) >= 2:
+                    # Only flag if brand appears multiple times with CONTEXT indicators
+                    # Higher thresholds to reduce false positives
+                    if brand_mentions >= 5 and len(found_indicators) >= 3:
                         brand_found_online = True
                         web_evidence = [f"mentions:{brand_mentions}"] + found_indicators[:3]
                         print(f"🌐 WEB FOUND: '{brand_name}' appears to be an existing business!", flush=True)
                         logging.warning(f"🌐 WEB FOUND: '{brand_name}' exists! mentions={brand_mentions}, indicators={found_indicators[:3]}")
-                    elif brand_mentions >= 5:
-                        # High mention count alone is a strong signal
+                    elif brand_mentions >= 10 and len(found_indicators) >= 1:
+                        # Very high mention count with at least one indicator
                         brand_found_online = True
-                        web_evidence = [f"mentions:{brand_mentions}"]
+                        web_evidence = [f"mentions:{brand_mentions}"] + found_indicators[:2]
                         print(f"🌐 WEB FOUND: '{brand_name}' has high visibility ({brand_mentions} mentions)!", flush=True)
                         logging.warning(f"🌐 WEB FOUND: '{brand_name}' high visibility: {brand_mentions} mentions")
                         
