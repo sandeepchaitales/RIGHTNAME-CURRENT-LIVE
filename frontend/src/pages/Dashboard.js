@@ -2020,21 +2020,18 @@ const Dashboard = () => {
                     )}
                 </section>
 
-                {/* "WHAT'S IN THE NAME?" BANNER - New Page (Page 3) */}
+                {/* PAGE 3: "WHAT'S IN THE NAME?" + DETAILED FRAMEWORK ANALYSIS */}
                 {brand.dimensions && (
                     <section className="pdf-page-break print-new-page">
+                        {/* Banner */}
                         <div className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-500 rounded-2xl p-8 text-center mb-6">
                             <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
                                 What's in the Name?
                             </h2>
                             <p className="text-white/80 mt-2 text-lg">Deep dive into your brand's DNA</p>
                         </div>
-                    </section>
-                )}
-
-                {/* SECTION 5: DETAILED DIMENSIONS */}
-                {brand.dimensions && (
-                    <section className="print-section">
+                        
+                        {/* Detailed Framework Analysis */}
                         <SectionHeader icon={BarChart3} title="Detailed Framework Analysis" subtitle="In-depth scoring breakdown" color="fuchsia" />
                         {isAuthenticated ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 print:gap-3">
