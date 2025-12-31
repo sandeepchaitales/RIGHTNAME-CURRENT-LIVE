@@ -1775,53 +1775,79 @@ const Dashboard = () => {
             {/* Print Styles */}
             <style>{`
                 @media print {
-                    @page { size: A4 portrait; margin: 12mm; }
+                    @page { 
+                        size: A4 portrait; 
+                        margin: 15mm 12mm; 
+                    }
                     
-                    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    html, body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                    }
                     
-                    body { margin: 0; padding: 0; }
+                    .no-print { 
+                        display: none !important; 
+                    }
                     
-                    .no-print { display: none !important; }
-                    
-                    /* COVER PAGE */
+                    /* COVER PAGE - Full page, centered */
                     .cover-page-container {
-                        position: static !important;
+                        position: relative !important;
                         left: auto !important;
                         visibility: visible !important;
                         width: 100% !important;
+                        min-height: 100vh !important;
                         display: flex !important;
                         flex-direction: column !important;
-                        min-height: 100vh !important;
                         align-items: center !important;
                         justify-content: center !important;
                         background: white !important;
-                        padding: 2rem !important;
+                        padding: 20mm !important;
                         page-break-after: always !important;
                         break-after: page !important;
+                        box-sizing: border-box !important;
                     }
                     
-                    /* PAGE BREAKS */
-                    .print-new-page { 
+                    /* NEW PAGE FOR SECTIONS */
+                    .print-new-page, .pdf-page-break { 
                         page-break-before: always !important; 
                         break-before: page !important;
-                        margin-top: 0 !important;
-                        padding-top: 1rem !important;
+                        padding-top: 10mm !important;
                     }
                     
-                    /* PREVENT BREAKS INSIDE CARDS */
-                    .print-card, section, .print-section { 
+                    /* PREVENT BREAKS INSIDE ELEMENTS */
+                    .print-card, 
+                    .print-section,
+                    section > div {
                         break-inside: avoid !important; 
                         page-break-inside: avoid !important;
-                        margin-bottom: 1rem !important;
                     }
                     
-                    /* MAIN CONTENT */
+                    /* MAIN CONTENT SPACING */
                     main {
-                        padding: 0 !important;
+                        max-width: 100% !important;
+                        padding: 0 5mm !important;
                     }
                     
-                    main > * {
-                        margin-bottom: 1rem !important;
+                    main > section {
+                        margin-bottom: 10mm !important;
+                    }
+                    
+                    /* GRID LAYOUTS */
+                    .grid {
+                        gap: 8px !important;
+                    }
+                    
+                    /* IMAGES */
+                    img {
+                        max-width: 100% !important;
+                        height: auto !important;
+                    }
+                    
+                    /* CARDS */
+                    .rounded-2xl, .rounded-xl {
+                        border-radius: 8px !important;
                     }
                 }
             `}</style>
