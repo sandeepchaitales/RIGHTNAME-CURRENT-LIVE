@@ -79,7 +79,7 @@ const SubSectionHeader = ({ icon: Icon, title, color = "slate" }) => (
 const CoverPage = ({ brandName, score, verdict, date, query, reportId, forPdf = false }) => {
     return (
         <div 
-            className="cover-page-container print:flex print:flex-col print:min-h-screen print:items-center print:justify-center print:bg-white print:p-8"
+            className="cover-page-container"
             style={{ 
                 position: 'absolute', 
                 left: '-9999px', 
@@ -87,12 +87,13 @@ const CoverPage = ({ brandName, score, verdict, date, query, reportId, forPdf = 
                 width: '210mm'
             }}
         >
-            {/* Logo */}
+            {/* Logo - 1.2 inch = ~115px */}
             <div className="mb-6">
                 <img 
                     src={LOGO_URL} 
                     alt="RIGHTNAME" 
-                    className="h-20 mx-auto"
+                    style={{ width: '115px', height: '115px', objectFit: 'contain' }}
+                    className="mx-auto"
                 />
             </div>
             
