@@ -1766,12 +1766,15 @@ const Dashboard = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 print:bg-white">
+            {/* Preload logo for print - hidden but forces browser to cache image */}
+            <img src={LOGO_URL} alt="" style={{ position: 'absolute', width: 1, height: 1, opacity: 0 }} />
+            
             {/* Print Styles - Enhanced Page Break Control */}
             <style>{`
                 @media print {
                     @page { size: A4 portrait; margin: 10mm; }
                     body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-                    img { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+                    img { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; max-width: 100%; }
                     .print-card { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 8px; }
                     .no-print { display: none !important; }
                     .pdf-page-break, .print-new-page { page-break-before: always !important; break-before: page !important; }
