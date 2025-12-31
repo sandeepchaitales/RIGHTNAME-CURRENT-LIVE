@@ -1959,6 +1959,302 @@ async def login_email(request: EmailLoginRequest, response: Response):
         "auth_type": "email"
     }
 
+# ==================== BRAND AUDIT ENDPOINTS ====================
+
+async def perform_web_search(query: str) -> str:
+    """Perform web search using DuckDuckGo"""
+    try:
+        from duckduckgo_search import DDGS
+        with DDGS() as ddgs:
+            results = list(ddgs.text(query, max_results=5))
+            if results:
+                formatted = []
+                for i, r in enumerate(results, 1):
+                    formatted.append(f"[{i}] {r.get('title', 'No title')}\n{r.get('body', 'No description')}\nURL: {r.get('href', 'No URL')}")
+                return "\n\n".join(formatted)
+            return "No results found"
+    except Exception as e:
+        logging.error(f"Web search error for '{query}': {e}")
+        return f"Search failed: {str(e)}"
+
+async def gather_brand_audit_research(brand_name: str, brand_website: str, competitor_1: str, 
+                                       competitor_2: str, category: str, geography: str) -> dict:
+    """Execute 4-phase research workflow for brand audit"""
+    
+    research_data = {}
+    all_queries = []
+    
+    # Extract domain names for cleaner searches
+    brand_domain = brand_website.replace("https://", "").replace("http://", "").replace("www.", "").split("/")[0]
+    comp1_domain = competitor_1.replace("https://", "").replace("http://", "").replace("www.", "").split("/")[0]
+    comp2_domain = competitor_2.replace("https://", "").replace("http://", "").replace("www.", "").split("/")[0]
+    comp1_name = comp1_domain.split(".")[0].title()
+    comp2_name = comp2_domain.split(".")[0].title()
+    
+    year_range = "2023 2024 2025"
+    
+    # PHASE 1: Foundational Brand Research
+    logging.info(f"Brand Audit Phase 1: Foundational research for {brand_name}")
+    phase1_queries = [
+        f"{brand_name} franchise {category} {geography}",
+        f"{brand_name} expansion growth {year_range}",
+        f"{brand_name} reviews ratings customer sentiment"
+    ]
+    all_queries.extend(phase1_queries)
+    
+    phase1_results = []
+    for q in phase1_queries:
+        result = await perform_web_search(q)
+        phase1_results.append(f"Query: {q}\n{result}")
+    research_data['phase1_data'] = "\n\n---\n\n".join(phase1_results)
+    
+    # PHASE 2: Competitive Landscape & Market Sizing
+    logging.info(f"Brand Audit Phase 2: Competitive landscape for {brand_name}")
+    phase2_queries = [
+        f"{brand_name} Instagram followers engagement social media",
+        f"{category} {geography} market size growth CAGR {year_range}",
+        f"{comp1_name} {comp2_name} {category} comparison {geography}"
+    ]
+    all_queries.extend(phase2_queries)
+    
+    phase2_results = []
+    for q in phase2_queries:
+        result = await perform_web_search(q)
+        phase2_results.append(f"Query: {q}\n{result}")
+    research_data['phase2_data'] = "\n\n---\n\n".join(phase2_results)
+    
+    # PHASE 3: Benchmarking & Unit Economics
+    logging.info(f"Brand Audit Phase 3: Benchmarking for {brand_name}")
+    phase3_queries = [
+        f"{comp1_name} {comp2_name} market share {geography} revenue",
+        f"{category} franchise investment cost ROI break-even {geography}",
+        f"{brand_name} revenue profitability unit economics"
+    ]
+    all_queries.extend(phase3_queries)
+    
+    phase3_results = []
+    for q in phase3_queries:
+        result = await perform_web_search(q)
+        phase3_results.append(f"Query: {q}\n{result}")
+    research_data['phase3_data'] = "\n\n---\n\n".join(phase3_results)
+    
+    # PHASE 4: Deep Validation & Strategic Context
+    logging.info(f"Brand Audit Phase 4: Deep validation for {brand_name}")
+    phase4_queries = [
+        f"{brand_name} founder background story",
+        f"{brand_name} Google reviews Justdial ratings",
+        f"{comp1_name} vs {comp2_name} vs {brand_name} {category} analysis"
+    ]
+    all_queries.extend(phase4_queries)
+    
+    phase4_results = []
+    for q in phase4_queries:
+        result = await perform_web_search(q)
+        phase4_results.append(f"Query: {q}\n{result}")
+    research_data['phase4_data'] = "\n\n---\n\n".join(phase4_results)
+    
+    research_data['all_queries'] = all_queries
+    
+    return research_data
+
+@api_router.post("/brand-audit", response_model=BrandAuditResponse)
+async def brand_audit(request: BrandAuditRequest):
+    """Execute comprehensive brand audit with 4-phase research methodology"""
+    import time as time_module
+    start_time = time_module.time()
+    
+    logging.info(f"Starting Brand Audit for: {request.brand_name}")
+    
+    if not LlmChat or not EMERGENT_KEY:
+        raise HTTPException(status_code=500, detail="LLM Integration not initialized")
+    
+    # Gather research data using 4-phase methodology
+    research_data = await gather_brand_audit_research(
+        brand_name=request.brand_name,
+        brand_website=request.brand_website,
+        competitor_1=request.competitor_1,
+        competitor_2=request.competitor_2,
+        category=request.category,
+        geography=request.geography
+    )
+    
+    logging.info(f"Research completed. Executing LLM analysis...")
+    
+    # Build prompt
+    user_prompt = build_brand_audit_prompt(
+        brand_name=request.brand_name,
+        brand_website=request.brand_website,
+        competitor_1=request.competitor_1,
+        competitor_2=request.competitor_2,
+        category=request.category,
+        geography=request.geography,
+        research_data=research_data
+    )
+    
+    # Use gpt-4o-mini for reliability
+    llm_chat = LlmChat(
+        api_key=EMERGENT_KEY,
+        session_id=f"brand_audit_{uuid.uuid4()}",
+        system_message=BRAND_AUDIT_SYSTEM_PROMPT
+    ).with_model("openai", "gpt-4o-mini")
+    
+    try:
+        user_message = UserMessage(text=user_prompt)
+        response = await llm_chat.send_message(user_message)
+        
+        content = ""
+        if hasattr(response, 'text'):
+            content = response.text
+        elif isinstance(response, str):
+            content = response
+        else:
+            content = str(response)
+        
+        # Extract JSON
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0]
+        elif "```" in content:
+            parts = content.split("```")
+            if len(parts) >= 2:
+                content = parts[1]
+                if content.startswith("json"):
+                    content = content[4:]
+        
+        content = content.strip()
+        
+        # Parse JSON
+        try:
+            data = json.loads(content)
+        except json.JSONDecodeError:
+            # Try repair
+            from json_repair import repair_json
+            content = repair_json(content)
+            data = json.loads(content)
+        
+        logging.info(f"Brand Audit LLM response parsed successfully")
+        
+        # Build response
+        report_id = f"audit_{uuid.uuid4().hex[:16]}"
+        
+        # Parse dimensions
+        dimensions = []
+        for dim in data.get('dimensions', []):
+            dimensions.append(BrandAuditDimension(
+                name=dim.get('name', ''),
+                score=float(dim.get('score', 0)),
+                reasoning=dim.get('reasoning', ''),
+                data_sources=dim.get('data_sources', []),
+                confidence=dim.get('confidence', 'MEDIUM')
+            ))
+        
+        # Ensure we have 8 dimensions
+        dimension_names = ["Heritage & Authenticity", "Customer Satisfaction", "Market Positioning", 
+                          "Growth Trajectory", "Operational Excellence", "Brand Awareness", 
+                          "Financial Viability", "Digital Presence"]
+        existing_names = [d.name for d in dimensions]
+        for name in dimension_names:
+            if name not in existing_names:
+                dimensions.append(BrandAuditDimension(name=name, score=5.0, reasoning="Data insufficient", confidence="LOW"))
+        
+        # Parse competitors
+        competitors = []
+        for comp in data.get('competitors', []):
+            competitors.append(CompetitorData(
+                name=comp.get('name', ''),
+                website=comp.get('website', ''),
+                founded=comp.get('founded'),
+                outlets=comp.get('outlets'),
+                rating=comp.get('rating'),
+                social_followers=comp.get('social_followers'),
+                key_strength=comp.get('key_strength'),
+                key_weakness=comp.get('key_weakness')
+            ))
+        
+        # Parse competitive matrix
+        competitive_matrix = []
+        for pos in data.get('competitive_matrix', []):
+            competitive_matrix.append(CompetitivePosition(
+                brand_name=pos.get('brand_name', ''),
+                x_score=float(pos.get('x_score', 50)),
+                y_score=float(pos.get('y_score', 50)),
+                quadrant=pos.get('quadrant')
+            ))
+        
+        # Parse SWOT
+        swot_data = data.get('swot', {})
+        swot = SWOTAnalysis(
+            strengths=[SWOTItem(**s) if isinstance(s, dict) else SWOTItem(point=str(s)) for s in swot_data.get('strengths', [])],
+            weaknesses=[SWOTItem(**w) if isinstance(w, dict) else SWOTItem(point=str(w)) for w in swot_data.get('weaknesses', [])],
+            opportunities=[SWOTItem(**o) if isinstance(o, dict) else SWOTItem(point=str(o)) for o in swot_data.get('opportunities', [])],
+            threats=[SWOTItem(**t) if isinstance(t, dict) else SWOTItem(point=str(t)) for t in swot_data.get('threats', [])]
+        )
+        
+        # Parse recommendations
+        immediate_recs = [StrategicRecommendation(**r) if isinstance(r, dict) else StrategicRecommendation(title=str(r), recommended_action=str(r)) 
+                         for r in data.get('immediate_recommendations', [])]
+        medium_recs = [StrategicRecommendation(**r) if isinstance(r, dict) else StrategicRecommendation(title=str(r), recommended_action=str(r)) 
+                      for r in data.get('medium_term_recommendations', [])]
+        long_recs = [StrategicRecommendation(**r) if isinstance(r, dict) else StrategicRecommendation(title=str(r), recommended_action=str(r)) 
+                    for r in data.get('long_term_recommendations', [])]
+        
+        # Parse market data
+        market_data_raw = data.get('market_data', {})
+        market_data = MarketData(
+            market_size=market_data_raw.get('market_size'),
+            cagr=market_data_raw.get('cagr'),
+            growth_drivers=market_data_raw.get('growth_drivers', []),
+            key_trends=market_data_raw.get('key_trends', [])
+        ) if market_data_raw else None
+        
+        # Build response
+        response_data = BrandAuditResponse(
+            report_id=report_id,
+            brand_name=request.brand_name,
+            brand_website=request.brand_website,
+            category=request.category,
+            geography=request.geography,
+            overall_score=float(data.get('overall_score', 0)),
+            verdict=data.get('verdict', 'MODERATE'),
+            executive_summary=data.get('executive_summary', ''),
+            investment_thesis=data.get('investment_thesis'),
+            brand_overview=data.get('brand_overview', {}),
+            dimensions=dimensions,
+            competitors=competitors,
+            competitive_matrix=competitive_matrix,
+            positioning_gap=data.get('positioning_gap'),
+            market_data=market_data,
+            swot=swot,
+            immediate_recommendations=immediate_recs,
+            medium_term_recommendations=medium_recs,
+            long_term_recommendations=long_recs,
+            risks=data.get('risks', []),
+            search_queries=research_data.get('all_queries', []),
+            sources=data.get('sources', []),
+            data_confidence=data.get('data_confidence', 'MEDIUM'),
+            created_at=datetime.now(timezone.utc).isoformat(),
+            processing_time_seconds=time_module.time() - start_time
+        )
+        
+        # Save to database
+        doc = response_data.model_dump()
+        doc['request'] = request.model_dump()
+        await db.brand_audits.insert_one(doc)
+        
+        logging.info(f"Brand Audit completed in {time_module.time() - start_time:.2f}s")
+        return response_data
+        
+    except Exception as e:
+        logging.error(f"Brand Audit LLM error: {e}")
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+@api_router.get("/brand-audit/{report_id}")
+async def get_brand_audit_report(report_id: str):
+    """Get a saved brand audit report by ID"""
+    report = await db.brand_audits.find_one({"report_id": report_id}, {"_id": 0})
+    if not report:
+        raise HTTPException(status_code=404, detail="Brand audit report not found")
+    return report
+
 # ==================== REPORT ENDPOINTS ====================
 
 @api_router.get("/reports/{report_id}")
