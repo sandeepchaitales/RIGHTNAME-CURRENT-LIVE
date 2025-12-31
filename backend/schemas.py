@@ -387,3 +387,118 @@ class StatusCheck(BaseModel):
 
 class StatusCheckCreate(BaseModel):
     client_name: str
+
+# ============ BRAND AUDIT SCHEMAS ============
+
+class BrandAuditRequest(BaseModel):
+    """Request model for Brand Audit tool"""
+    brand_name: str = Field(description="Name of the brand to audit")
+    brand_website: str = Field(description="Brand's website URL")
+    competitor_1: str = Field(description="First competitor's website URL")
+    competitor_2: str = Field(description="Second competitor's website URL")
+    category: str = Field(description="Business category/industry")
+    geography: str = Field(description="Primary geography/market")
+
+class SWOTItem(BaseModel):
+    """Single SWOT item with source"""
+    point: str
+    source: Optional[str] = None
+    confidence: Optional[str] = Field(default="MEDIUM", description="HIGH/MEDIUM/LOW")
+
+class SWOTAnalysis(BaseModel):
+    """Complete SWOT analysis"""
+    strengths: List[SWOTItem] = Field(default=[], min_length=0)
+    weaknesses: List[SWOTItem] = Field(default=[], min_length=0)
+    opportunities: List[SWOTItem] = Field(default=[], min_length=0)
+    threats: List[SWOTItem] = Field(default=[], min_length=0)
+
+class CompetitorData(BaseModel):
+    """Competitor information for comparison"""
+    name: str
+    website: str
+    founded: Optional[str] = None
+    outlets: Optional[str] = None
+    rating: Optional[float] = None
+    social_followers: Optional[str] = None
+    key_strength: Optional[str] = None
+    key_weakness: Optional[str] = None
+
+class MarketData(BaseModel):
+    """Market intelligence data"""
+    market_size: Optional[str] = None
+    cagr: Optional[str] = None
+    growth_drivers: List[str] = Field(default=[])
+    key_trends: List[str] = Field(default=[])
+
+class StrategicRecommendation(BaseModel):
+    """Strategic recommendation with timeline"""
+    title: str
+    current_state: Optional[str] = None
+    root_cause: Optional[str] = None
+    recommended_action: str
+    expected_outcome: Optional[str] = None
+    success_metric: Optional[str] = None
+    priority: Optional[str] = Field(default="MEDIUM", description="HIGH/MEDIUM/LOW")
+
+class BrandAuditDimension(BaseModel):
+    """8-dimension scoring for brand audit"""
+    name: str
+    score: float = Field(default=0.0, ge=0, le=10)
+    reasoning: str = Field(default="")
+    data_sources: List[str] = Field(default=[])
+    confidence: str = Field(default="MEDIUM", description="HIGH/MEDIUM/LOW")
+
+class CompetitivePosition(BaseModel):
+    """Brand position in competitive matrix"""
+    brand_name: str
+    x_score: float = Field(default=50.0, description="Brand Awareness (0-100)")
+    y_score: float = Field(default=50.0, description="Customer Satisfaction (0-100)")
+    quadrant: Optional[str] = None
+
+class BrandAuditResponse(BaseModel):
+    """Complete Brand Audit response"""
+    report_id: str
+    brand_name: str
+    brand_website: str
+    category: str
+    geography: str
+    
+    # Overall Assessment
+    overall_score: float = Field(default=0.0, description="Overall brand health score (0-100)")
+    verdict: str = Field(default="PENDING", description="STRONG/MODERATE/WEAK/CRITICAL")
+    executive_summary: str = Field(default="")
+    investment_thesis: Optional[str] = None
+    
+    # Brand Overview
+    brand_overview: Optional[Dict[str, Any]] = Field(default={})
+    
+    # 8-Dimension Scores
+    dimensions: List[BrandAuditDimension] = Field(default=[])
+    
+    # Competitive Analysis
+    competitors: List[CompetitorData] = Field(default=[])
+    competitive_matrix: List[CompetitivePosition] = Field(default=[])
+    positioning_gap: Optional[str] = None
+    
+    # Market Intelligence
+    market_data: Optional[MarketData] = None
+    
+    # SWOT Analysis
+    swot: Optional[SWOTAnalysis] = None
+    
+    # Strategic Recommendations
+    immediate_recommendations: List[StrategicRecommendation] = Field(default=[], description="0-6 months")
+    medium_term_recommendations: List[StrategicRecommendation] = Field(default=[], description="6-18 months")
+    long_term_recommendations: List[StrategicRecommendation] = Field(default=[], description="18-36 months")
+    
+    # Risk Analysis
+    risks: List[Dict[str, str]] = Field(default=[], description="Risk and mitigation pairs")
+    
+    # Research Transparency
+    search_queries: List[str] = Field(default=[], description="All 12 search queries used")
+    sources: List[Dict[str, str]] = Field(default=[], description="All sources with citations")
+    data_confidence: Optional[str] = Field(default="MEDIUM", description="Overall data confidence")
+    
+    # Metadata
+    created_at: Optional[str] = None
+    processing_time_seconds: Optional[float] = None
