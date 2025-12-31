@@ -1931,7 +1931,8 @@ const Dashboard = () => {
                     />
                 </section>
 
-                {/* SECTION 1: HERO */}
+                {/* ==================== PAGE 2: EVALUATION SUMMARY ==================== */}
+                {/* Hero + Score + Radar + Quick Dimensions */}
                 <section className="print-section">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 print:gap-4">
                         <div className="lg:col-span-2">
@@ -1959,14 +1960,15 @@ const Dashboard = () => {
                     </div>
                 </section>
 
-                {/* SECTION 2: QUICK DIMENSIONS */}
+                {/* Quick Dimensions Index - Still Page 2 */}
                 <section className="print-section">
                     <QuickDimensionsGrid dimensions={brand.dimensions} />
                 </section>
 
-                {/* SECTION 3: FINAL ASSESSMENT - Pages 1&2 flow naturally */}
+                {/* ==================== PAGE 3: FINAL ASSESSMENT + STRATEGY ==================== */}
+                {/* Final Assessment */}
                 {brand.final_assessment && (
-                    <section className="print-section">
+                    <section className="print-new-page print-section">
                         <SectionHeader icon={Zap} title="Final Assessment" subtitle="Consultant Verdict & Roadmap" color="emerald" />
                         {isAuthenticated ? (
                             <FinalAssessmentFull assessment={brand.final_assessment} verdict={brand.verdict} score={brand.namescore} />
@@ -1976,7 +1978,7 @@ const Dashboard = () => {
                     </section>
                 )}
 
-                {/* SECTION 4: STRATEGY SNAPSHOT - Still on Page 2 */}
+                {/* Strategy Snapshot - Still Page 3 */}
                 <section className="print-section">
                     <SectionHeader icon={Target} title="Strategy Snapshot" subtitle="Strengths and risks analysis" color="emerald" />
                     {isAuthenticated ? (
@@ -1986,7 +1988,7 @@ const Dashboard = () => {
                     )}
                 </section>
 
-                {/* PAGE 3: "WHAT'S IN THE NAME?" + DETAILED FRAMEWORK ANALYSIS */}
+                {/* ==================== PAGE 4+: WHAT'S IN THE NAME + 6 DIMENSIONS (STACKED) ==================== */}
                 {brand.dimensions && (
                     <section className="pdf-page-break print-new-page">
                         {/* Banner */}
