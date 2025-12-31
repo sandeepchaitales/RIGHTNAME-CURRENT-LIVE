@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,12 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { 
     Search, 
     Building2, 
@@ -23,7 +29,9 @@ import {
     Shield,
     ArrowRight,
     Loader2,
-    CheckCircle2
+    CheckCircle2,
+    ChevronDown,
+    Sparkles
 } from 'lucide-react';
 
 // Logo URL - same as main tool
