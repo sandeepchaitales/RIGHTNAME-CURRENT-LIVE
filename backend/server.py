@@ -715,8 +715,97 @@ FAMOUS_BRANDS = {
     "flipkart", "snapdeal", "bigbasket", "blinkit", "zepto", "instamart", "dunzo"
 }
 
+# INAPPROPRIATE/OFFENSIVE WORDS - Brand names that sound like or contain these should be REJECTED
+INAPPROPRIATE_PATTERNS = [
+    # Sexual/Vulgar terms and phonetic variants
+    "masturbat", "masterbat", "masturbate", "masterbate",
+    "pornhub", "xvideo", "xnxx", "redtube", "youporn",
+    "fuck", "fuk", "phuck", "phuk", "fck",
+    "shit", "shyt", "sht",
+    "ass", "arse", "azz",
+    "bitch", "bich", "bytch",
+    "cunt", "kunt",
+    "dick", "dik", "dck",
+    "cock", "cok", "kok",
+    "penis", "pnis",
+    "vagina", "vajina",
+    "boob", "bewb", "boobs",
+    "titty", "tity", "tits",
+    "whore", "hore", "hoar",
+    "slut", "slutt",
+    "nigger", "nigga", "nigg",
+    "faggot", "fag", "fagg",
+    "retard", "retrd",
+    # Drugs
+    "cocaine", "cocain", "heroin", "heroine",
+    "meth", "methamphetamine",
+    # Violence
+    "kill", "murder", "rape",
+    # Phonetic traps (words that sound inappropriate)
+    "classbate", "classbait", "masturb", "masterbait",
+    "analytic" # This is fine - but "anal" alone is not
+]
 
-async def dynamic_brand_search(brand_name: str, category: str = "") -> dict:
+def check_inappropriate_name(brand_name: str) -> dict:
+    """
+    Check if brand name contains or sounds like inappropriate/offensive words.
+    Returns rejection info if inappropriate.
+    """
+    import re
+    
+    normalized = brand_name.lower().strip().replace(" ", "").replace("-", "").replace("_", "")
+    
+    # Check for inappropriate patterns
+    for pattern in INAPPROPRIATE_PATTERNS:
+        if pattern in normalized:
+            return {
+                "is_inappropriate": True,
+                "matched_pattern": pattern,
+                "reason": f"'{brand_name}' contains or sounds like inappropriate/offensive content. This brand name would cause serious reputational damage and cannot be used commercially."
+            }
+    
+    # Phonetic check - check if it SOUNDS like something inappropriate
+    # "Classbate" sounds like "Masturbate"
+    phonetic_checks = [
+        ("bate", ["masturbate", "masterbate"]),  # -bate ending
+        ("bait", ["masturbait", "masterbait"]),  # -bait ending  
+        ("porn", ["porn", "pron"]),
+        ("hore", ["whore"]),
+        ("slut", ["slut"]),
+        ("fuk", ["fuck"]),
+        ("sht", ["shit"]),
+    ]
+    
+    for ending, sounds_like in phonetic_checks:
+        if normalized.endswith(ending) or ending in normalized:
+            # Check the full word context
+            for bad_word in sounds_like:
+                # If the brand sounds similar to a bad word
+                if _sounds_similar(normalized, bad_word):
+                    return {
+                        "is_inappropriate": True,
+                        "matched_pattern": bad_word,
+                        "reason": f"'{brand_name}' phonetically resembles inappropriate content ('{bad_word}'). This would cause serious brand reputation issues."
+                    }
+    
+    return {"is_inappropriate": False}
+
+def _sounds_similar(word1: str, word2: str) -> bool:
+    """Check if two words sound similar using simple phonetic matching"""
+    # Simple check: if the ending matches and length is similar
+    if len(word1) < 4 or len(word2) < 4:
+        return False
+    
+    # Check suffix similarity
+    if word1[-4:] == word2[-4:]:
+        return True
+    
+    # Check if one contains significant part of other
+    if len(word1) >= 6 and len(word2) >= 6:
+        if word1[-5:] == word2[-5:] or word1[-6:] == word2[-6:]:
+            return True
+    
+    return False
     """
     LLM-FIRST BRAND CONFLICT DETECTION + WEB VERIFICATION
     
