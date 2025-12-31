@@ -993,6 +993,93 @@ const LandingPage = () => {
 
       </div>
       
+      {/* Brand Audit CTA Section - For Existing Brands */}
+      <div className="py-20 px-6 bg-gradient-to-br from-emerald-50 via-white to-teal-50 border-t border-emerald-100">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="space-y-6">
+              <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 font-bold">
+                FOR EXISTING BRANDS
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900">
+                Already Have a <span className="text-emerald-600">Brand?</span>
+              </h2>
+              <p className="text-lg text-slate-600 leading-relaxed">
+                Get a comprehensive audit of your existing brand with competitive analysis, 
+                SWOT assessment, 8-dimension scoring, and strategic recommendations.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  Competitor Benchmarking
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  SWOT Analysis
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  Strategic Roadmap
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-600">
+                  <CheckCircle className="w-4 h-4 text-emerald-500" />
+                  8-Dimension Scoring
+                </div>
+              </div>
+              <Button 
+                onClick={() => navigate('/brand-audit')}
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-lg px-8 py-6 rounded-xl shadow-xl shadow-emerald-300/50 hover:scale-105 transition-transform"
+              >
+                <BarChart3 className="w-5 h-5 mr-2" />
+                Start Brand Audit
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+              <p className="text-sm text-emerald-600 font-semibold">100% FREE • No Credit Card Required</p>
+            </div>
+            
+            {/* Right Content - Visual */}
+            <div className="relative">
+              <div className="bg-white rounded-2xl border-2 border-emerald-200 shadow-2xl shadow-emerald-200/50 p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-bold text-slate-900">Brand Audit Report</h3>
+                  <Badge className="bg-emerald-100 text-emerald-700">Sample</Badge>
+                </div>
+                
+                {/* Sample Radar Preview */}
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { name: "Heritage", score: 8 },
+                    { name: "Satisfaction", score: 7 },
+                    { name: "Positioning", score: 6 },
+                    { name: "Growth", score: 9 },
+                    { name: "Operations", score: 7 },
+                    { name: "Awareness", score: 5 },
+                    { name: "Viability", score: 8 },
+                    { name: "Digital", score: 6 }
+                  ].map((dim, i) => (
+                    <div key={i} className="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
+                      <span className="text-xs text-slate-600">{dim.name}</span>
+                      <span className={`text-xs font-bold ${dim.score >= 7 ? 'text-emerald-600' : 'text-amber-600'}`}>{dim.score}/10</span>
+                    </div>
+                  ))}
+                </div>
+                
+                {/* Sample Score */}
+                <div className="text-center p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl">
+                  <div className="text-3xl font-black text-emerald-600">72/100</div>
+                  <div className="text-xs text-slate-500">Brand Health Score</div>
+                </div>
+              </div>
+              
+              {/* Decorative elements */}
+              <div className="absolute -top-4 -right-4 w-20 h-20 bg-emerald-200 rounded-full blur-2xl opacity-60"></div>
+              <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-teal-200 rounded-full blur-2xl opacity-60"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Footer */}
       <Footer />
     </div>
