@@ -84,9 +84,19 @@ const CoverPage = ({ brandName, score, verdict, date, query, reportId, forPdf = 
     
     return (
         <div className={baseClass} style={forPdf ? { pageBreakAfter: 'always' } : {}}>
-            {/* Logo - Text-based for reliable printing */}
+            {/* Logo - Image with text fallback */}
             <div className="mb-6">
-                <div className="text-5xl font-black">
+                <img 
+                    src={LOGO_URL} 
+                    alt="RIGHTNAME" 
+                    className="h-20 mx-auto"
+                    style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}
+                    onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'block';
+                    }}
+                />
+                <div className="text-5xl font-black text-center" style={{ display: 'none' }}>
                     <span className="text-violet-600">RIGHT</span>
                     <span className="text-slate-900">NAME</span>
                 </div>
